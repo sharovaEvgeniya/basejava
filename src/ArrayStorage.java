@@ -69,5 +69,6 @@ public class ArrayStorage {
 
     int size() {
         return size;
+
     }
 }
