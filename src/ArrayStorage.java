@@ -19,25 +19,32 @@ public class ArrayStorage {
 
     Resume get(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (uuid == storage[i].uuid.intern()) return storage[i];
+            if (storage[i].uuid.equals(uuid)) return storage[i];
         }
         return null;
     }
 
     void delete(String uuid) {
-        int index = gettingIndex(uuid);
-        System.arraycopy(storage, size - 1, storage, index, 1);
+        int index = findIndex(uuid);
+        if (index == -1) {
+            return;
+        }
+        while (index < size - 1) {
+            storage[index] = storage[index + 1];
+            index++;
+        }
+        storage[index] = null;
         size--;
     }
 
-    int gettingIndex(String uuid) {
-        int index = 0;
+    int findIndex(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (storage[i].uuid == uuid) {
-                index = i;
+            if (storage[i].uuid.equals(uuid)) {
+                return i;
+
             }
         }
-        return index;
+        return -1;
     }
 
     /**
