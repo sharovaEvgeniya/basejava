@@ -33,7 +33,6 @@ public class ArrayStorage {
         } else {
             storage[index] = storage[size - 1];
         }
-//        storage[index] = null;
         size--;
     }
 
