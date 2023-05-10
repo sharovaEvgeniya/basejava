@@ -30,9 +30,8 @@ public class ArrayStorage {
         int index = findIndex(uuid);
         if (index == -1) {
             return;
-        } else {
-            storage[index] = storage[size - 1];
         }
+        storage[index] = storage[size - 1];
         size--;
     }
 
