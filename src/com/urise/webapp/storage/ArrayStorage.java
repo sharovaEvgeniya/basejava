@@ -9,6 +9,7 @@ import java.util.Arrays;
  */
 public class ArrayStorage {
     Resume[] storage = new Resume[10000];
+    int maxSize = 10000;
     int size;
 
     public void clear() {
@@ -16,23 +17,32 @@ public class ArrayStorage {
         size = 0;
     }
 
-    public void save(Resume r) {
-        storage[size] = r;
-        size++;
+    public void save(Resume resume) {
+        int index = findIndex(resume.uuid);
+        if(size == maxSize) {
+            System.out.println("Storage is full");
+            return;
+        }
+        if(index == -1) {
+            storage[size] = resume;
+            size++;
+            System.out.println("Add " + resume.uuid +" in storage");
+        }
     }
 
     public Resume get(String uuid) {
         int index = findIndex(uuid);
-        if (index == -1) {
-            return null;
-        } else {
+        if (index != -1) {
+            System.out.println("get " + uuid);
             return storage[index];
         }
+        return null;
     }
 
     public void delete(String uuid) {
         int index = findIndex(uuid);
-        if (index == -1) {
+        if(index == -1) {
+            System.out.println("Resume with " + uuid + " does not exist");
             return;
         }
         storage[index] = storage[size - 1];
@@ -60,6 +70,10 @@ public class ArrayStorage {
     }
 
     public void update(Resume resume) {
-
+        int index = findIndex(resume.uuid);
+        if (index != -1) {
+            storage[index] = resume;
+            System.out.println("Update is correct");
+        }
     }
 }
