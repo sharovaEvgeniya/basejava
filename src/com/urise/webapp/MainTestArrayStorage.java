@@ -1,5 +1,10 @@
+package com.urise.webapp;
+
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.ArrayStorage;
+
 /**
- * Test for your ArrayStorage implementation
+ * Test for your com.urise.webapp.storage.ArrayStorage implementation
  */
 public class MainTestArrayStorage {
     static final ArrayStorage ARRAY_STORAGE = new ArrayStorage();
@@ -16,7 +21,12 @@ public class MainTestArrayStorage {
         ARRAY_STORAGE.save(r2);
         ARRAY_STORAGE.save(r3);
 
+        ARRAY_STORAGE.update(r1);
+        ARRAY_STORAGE.update(r2);
+        ARRAY_STORAGE.update(r3);
+
         System.out.println("Get r1: " + ARRAY_STORAGE.get(r1.uuid));
+
         System.out.println("Size: " + ARRAY_STORAGE.size());
 
         System.out.println("Get dummy: " + ARRAY_STORAGE.get("dummy"));

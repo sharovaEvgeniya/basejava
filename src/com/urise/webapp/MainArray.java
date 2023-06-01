@@ -1,9 +1,14 @@
+package com.urise.webapp;
+
+import com.urise.webapp.model.Resume;
+import com.urise.webapp.storage.ArrayStorage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
 /**
- * Interactive test for ArrayStorage implementation
+ * Interactive test for com.urise.webapp.storage.ArrayStorage implementation
  * (just run, no need to understand)
  */
 public class MainArray {
@@ -24,34 +29,27 @@ public class MainArray {
                 uuid = params[1].intern();
             }
             switch (params[0]) {
-                case "list":
-                    printAll();
-                    break;
-                case "size":
-                    System.out.println(ARRAY_STORAGE.size());
-                    break;
-                case "save":
+                case "list" -> printAll();
+                case "size" -> System.out.println(ARRAY_STORAGE.size());
+                case "save" -> {
                     r = new Resume();
                     r.uuid = uuid;
                     ARRAY_STORAGE.save(r);
                     printAll();
-                    break;
-                case "delete":
+                }
+                case "delete" -> {
                     ARRAY_STORAGE.delete(uuid);
                     printAll();
-                    break;
-                case "get":
-                    System.out.println(ARRAY_STORAGE.get(uuid));
-                    break;
-                case "clear":
+                }
+                case "get" -> System.out.println(ARRAY_STORAGE.get(uuid));
+                case "clear" -> {
                     ARRAY_STORAGE.clear();
                     printAll();
-                    break;
-                case "exit":
+                }
+                case "exit" -> {
                     return;
-                default:
-                    System.out.println("Неверная команда.");
-                    break;
+                }
+                default -> System.out.println("Неверная команда.");
             }
         }
     }
