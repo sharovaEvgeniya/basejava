@@ -19,14 +19,14 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         int index = findIndex(resume.uuid);
-        if(size == maxSize) {
+        if (size == maxSize) {
             System.out.println("Storage is full");
             return;
         }
-        if(index == -1) {
+        if (index == -1) {
             storage[size] = resume;
             size++;
-            System.out.println("Add " + resume.uuid +" in storage");
+            System.out.println("Add " + resume.uuid + " in storage");
         }
     }
 
@@ -41,7 +41,7 @@ public class ArrayStorage {
 
     public void delete(String uuid) {
         int index = findIndex(uuid);
-        if(index == -1) {
+        if (index == -1) {
             System.out.println("Resume with " + uuid + " does not exist");
             return;
         }
@@ -73,7 +73,7 @@ public class ArrayStorage {
         int index = findIndex(resume.uuid);
         if (index != -1) {
             storage[index] = resume;
-            System.out.println("Update is correct");
+            System.out.println("Update " + resume.uuid + " is correct");
         }
     }
 }
