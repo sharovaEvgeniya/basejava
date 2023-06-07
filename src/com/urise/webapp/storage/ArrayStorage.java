@@ -8,9 +8,9 @@ import java.util.Arrays;
  * Array based storage for Resumes
  */
 public class ArrayStorage {
-    Resume[] storage = new Resume[10000];
-    int maxSize = 10000;
-    int size;
+    protected final int STORAGE_LIMIT = 10000;
+    private final Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected int size = 0;
 
     public void clear() {
         Arrays.fill(storage, 0, size, null);
@@ -19,11 +19,11 @@ public class ArrayStorage {
 
     public void save(Resume resume) {
         int index = findIndex(resume.uuid);
-        if (size == maxSize) {
+        if (size == STORAGE_LIMIT) {
             System.out.println("Storage is full");
-            return;
-        }
-        if (index == -1) {
+        } else if (index != -1) {
+            System.out.println("Resume " + resume.uuid + " already exists");
+        } else {
             storage[size] = resume;
             size++;
             System.out.println("Add " + resume.uuid + " in storage");
@@ -32,7 +32,9 @@ public class ArrayStorage {
 
     public Resume get(String uuid) {
         int index = findIndex(uuid);
-        if (index != -1) {
+        if (index == -1) {
+            System.out.println("Resume with " + uuid + " does not exist");
+        } else {
             System.out.println("get " + uuid);
             return storage[index];
         }
@@ -71,7 +73,9 @@ public class ArrayStorage {
 
     public void update(Resume resume) {
         int index = findIndex(resume.uuid);
-        if (index != -1) {
+        if (index == -1) {
+            System.out.println("Resume with " + resume.uuid + " does not exist");
+        } else {
             storage[index] = resume;
             System.out.println("Update " + resume.uuid + " is correct");
         }
