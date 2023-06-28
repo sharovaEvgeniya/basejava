@@ -1,20 +1,5 @@
 package com.urise.webapp.storage;
 
-import org.junit.Test;
+public class SortedArrayStorageTest extends AbstractArrayStorageTest {
 
-import static org.junit.Assert.*;
-
-public class SortedArrayStorageTest {
-
-    @Test
-    public void findIndex() throws Exception {
-    }
-
-    @Test
-    public void saveResume() throws Exception {
-    }
-
-    @Test
-    public void deleteResume() throws Exception {
-    }
 }
