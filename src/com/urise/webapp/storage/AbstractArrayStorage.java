@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 public abstract class AbstractArrayStorage implements Storage {
     private final Logger log = Logger.getLogger(AbstractArrayStorage.class.getName());
-    protected final int STORAGE_LIMIT = 10000;
+    protected static final int STORAGE_LIMIT = 10000;
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
