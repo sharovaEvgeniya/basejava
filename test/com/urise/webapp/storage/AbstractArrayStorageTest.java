@@ -86,7 +86,6 @@ public abstract class AbstractArrayStorageTest {
 
     @Test
     public void size() {
-
         assertSize(3);
     }
 
@@ -120,11 +119,9 @@ public abstract class AbstractArrayStorageTest {
         Assert.assertEquals(3, storage.size());
     }
 
-
     private void assertSize(int size) {
         Assert.assertEquals(size, storage.size());
     }
-
 
     private void assertGet(Resume resume) {
         Assert.assertEquals(resume, storage.get(resume.getUuid()));
