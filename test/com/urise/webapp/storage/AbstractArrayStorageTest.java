@@ -112,9 +112,6 @@ public abstract class AbstractArrayStorageTest {
     public void getAll() {
         Resume[] expected = new Resume[]{RESUME_1, RESUME_2, RESUME_3};
         Resume[] actual = storage.getAll();
-        Assert.assertEquals(actual[0].getUuid(), RESUME_1.getUuid());
-        Assert.assertEquals(actual[1].getUuid(), RESUME_2.getUuid());
-        Assert.assertEquals(actual[2].getUuid(), RESUME_3.getUuid());
         Assert.assertArrayEquals(expected, actual);
         Assert.assertEquals(3, storage.size());
     }
