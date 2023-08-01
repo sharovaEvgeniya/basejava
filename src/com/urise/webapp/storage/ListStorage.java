@@ -45,7 +45,6 @@ public class ListStorage extends AbstractStorage {
 
     @Override
     public Resume get(String uuid) {
-        System.out.println(getKey(uuid));
         if (getKey(uuid) == -1) {
             throw new NotExistStorageException(uuid);
         } else {
