@@ -1,7 +1,5 @@
 package com.urise.webapp.storage;
 
-import com.urise.webapp.exception.ExistStorageException;
-import com.urise.webapp.exception.NotExistStorageException;
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
@@ -15,28 +13,27 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected int size = 0;
 
 
-    protected abstract int findIndex(String uuid);
+    protected abstract int getIndex(String uuid);
 
     protected abstract void saveResume(int index, Resume resume);
 
     protected abstract void deleteResume(int index);
 
-    public final void update(Resume resume) {
-        int index = findIndex(resume.getUuid());
-        if (index == -1) {
-            throw new NotExistStorageException(resume.getUuid());
-        } else {
-            storage[index] = resume;
-            log.info("Update " + resume.getUuid() + " is correct");
-        }
+    public void clearStorage() {
+        Arrays.fill(storage, 0, size, null);
+        size = 0;
     }
 
-    public final void save(Resume resume) {
-        int index = findIndex(resume.getUuid());
+    public final void updateStorage(Resume resume) {
+        int index = getIndex(resume.getUuid());
+        storage[index] = resume;
+        log.info("Update " + resume.getUuid() + " is correct");
+    }
+
+    public final void saveStorage(Resume resume) {
+        int index = getIndex(resume.getUuid());
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage is full", resume.getUuid());
-        } else if (index >= 0) {
-            throw new ExistStorageException(resume.getUuid());
         } else {
             saveResume(index, resume);
             size++;
@@ -44,35 +41,24 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    public final void delete(String uuid) {
-        int index = findIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        }
+    public final Resume getStorage(String uuid) {
+        int index = getIndex(uuid);
+        log.info("get " + uuid);
+        return storage[index];
+    }
+
+    public final void deleteStorage(String uuid) {
+        int index = getIndex(uuid);
         deleteResume(index);
         storage[size - 1] = null;
         size--;
     }
 
-    public int size() {
-        return size;
-    }
-
-    public final Resume get(String uuid) {
-        int index = findIndex(uuid);
-        if (index == -1) {
-            throw new NotExistStorageException(uuid);
-        }
-        log.info("get " + uuid);
-        return storage[index];
-    }
-
-    public void clear() {
-        Arrays.fill(storage, 0, size, null);
-        size = 0;
-    }
-
-    public Resume[] getAll() {
+    public Resume[] getAllStorage() {
         return Arrays.copyOf(storage, size);
+    }
+
+    public int sizeStorage() {
+        return size;
     }
 }
