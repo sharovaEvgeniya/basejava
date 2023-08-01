@@ -10,7 +10,7 @@ import java.util.List;
 public class ListStorage extends AbstractStorage {
     protected final List<Resume> storage = new ArrayList<>();
 
-    public Integer getKey(String uuid) {
+    public int getKey(String uuid) {
         for (int i = 0; i < storage.size(); i++) {
             if (storage.get(i).toString().equals(uuid)) {
                 return i;
