@@ -12,25 +12,31 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-
     protected abstract int getIndex(String uuid);
 
     protected abstract void saveResume(int index, Resume resume);
 
     protected abstract void deleteResume(int index);
 
-    public void clearStorage() {
+    @Override
+    public boolean isExist(Object searchKey) {
+        return (int) searchKey >= 0;
+    }
+
+    @Override
+    public void doClear() {
         Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
-    public final void updateStorage(Resume resume) {
-        int index = getIndex(resume.getUuid());
-        storage[index] = resume;
+    @Override
+    public final void doUpdate(Resume resume, Object searchKey) {
+        storage[(int) searchKey] = resume;
         log.info("Update " + resume.getUuid() + " is correct");
     }
 
-    public final void saveStorage(Resume resume) {
+    @Override
+    public final void doSave(Resume resume, Object searchKey) {
         int index = getIndex(resume.getUuid());
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage is full", resume.getUuid());
@@ -41,24 +47,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         }
     }
 
-    public final Resume getStorage(String uuid) {
-        int index = getIndex(uuid);
-        log.info("get " + uuid);
-        return storage[index];
+    @Override
+    public final Resume doGet(Object searchKey) {
+        log.info("get " + storage[(int) searchKey].getUuid());
+        return storage[(int) searchKey];
     }
 
-    public final void deleteStorage(String uuid) {
-        int index = getIndex(uuid);
-        deleteResume(index);
+    @Override
+    public final void doDelete(Object searchKey) {
+        deleteResume((Integer) searchKey);
         storage[size - 1] = null;
         size--;
     }
 
-    public Resume[] getAllStorage() {
+    @Override
+    public Resume[] doGetAll() {
         return Arrays.copyOf(storage, size);
     }
 
-    public int sizeStorage() {
+    @Override
+    public int doSize() {
         return size;
     }
 }
