@@ -2,11 +2,11 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    Map<String, Resume> storage = new HashMap<>();
+    Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     protected int getIndex(String uuid) {
@@ -41,7 +41,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        storage.put(resume.getUuid(), resume);
+        storage.putIfAbsent(resume.getUuid(), resume);
     }
 
     @Override
