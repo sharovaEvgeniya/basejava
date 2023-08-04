@@ -9,20 +9,18 @@ public class MapStorage extends AbstractStorage {
     Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
-    protected int getIndex(String uuid) {
-        int i = 0;
+    protected Object getSearchKey(Object uuid) {
         for (Map.Entry<String, Resume> entry : storage.entrySet()) {
             if (entry.getKey().equals(uuid)) {
-                return i;
+                return entry.getKey();
             }
-            i++;
         }
-        return -1;
+        return null;
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return (int) searchKey != -1;
+        return searchKey != null;
     }
 
     @Override
@@ -32,11 +30,7 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected void doUpdate(Resume resume, Object searchKey) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getKey().equals(resume.getUuid())) {
-                storage.put(entry.getKey(), entry.getValue());
-            }
-        }
+        storage.put((String) searchKey, resume);
     }
 
     @Override
@@ -46,27 +40,12 @@ public class MapStorage extends AbstractStorage {
 
     @Override
     protected Resume doGet(Object searchKey) {
-        int i = 0;
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (i == (int) searchKey) {
-                return entry.getValue();
-            }
-            i++;
-        }
-        return null;
+        return storage.get((String) searchKey);
     }
 
     @Override
     protected void doDelete(Object searchKey) {
-        int i = 0;
-        Object key = null;
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (i == (int) searchKey) {
-                key = entry.getKey();
-            }
-            i++;
-        }
-        storage.remove(key);
+        storage.remove((String) searchKey);
     }
 
     @Override

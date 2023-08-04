@@ -6,14 +6,14 @@ import java.util.Arrays;
 
 public class SortedArrayStorage extends AbstractArrayStorage {
     @Override
-    protected int getIndex(String uuid) {
-        Resume searchRey = new Resume(uuid);
+    protected Integer getSearchKey(Object uuid) {
+        Resume searchRey = new Resume(uuid.toString());
         return Arrays.binarySearch(storage, 0, size, searchRey);
     }
 
     @Override
     protected void saveResume(int index, Resume resume) {
-        int insertionIndex = -getIndex(resume.getUuid()) - 1;
+        int insertionIndex = -getSearchKey(resume.getUuid()) - 1;
         System.arraycopy(storage, insertionIndex, storage, insertionIndex + 1, size - insertionIndex);
         storage[insertionIndex] = resume;
     }

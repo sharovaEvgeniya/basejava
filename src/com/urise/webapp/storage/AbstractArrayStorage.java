@@ -12,7 +12,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     protected final Resume[] storage = new Resume[STORAGE_LIMIT];
     protected int size = 0;
 
-    protected abstract int getIndex(String uuid);
+    protected abstract Integer getSearchKey(Object uuid);
 
     protected abstract void saveResume(int index, Resume resume);
 
@@ -37,7 +37,7 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public final void doSave(Resume resume, Object searchKey) {
-        int index = getIndex(resume.getUuid());
+        int index = getSearchKey(resume.getUuid());
         if (size >= STORAGE_LIMIT) {
             throw new StorageException("Storage is full", resume.getUuid());
         } else {
