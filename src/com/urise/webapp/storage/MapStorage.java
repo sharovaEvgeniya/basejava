@@ -6,7 +6,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class MapStorage extends AbstractStorage {
-    Map<String, Resume> storage = new LinkedHashMap<>();
+    private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     protected Object getSearchKey(Object uuid) {
@@ -15,12 +15,12 @@ public class MapStorage extends AbstractStorage {
                 return entry.getKey();
             }
         }
-        return null;
+        return uuid;
     }
 
     @Override
     protected boolean isExist(Object searchKey) {
-        return searchKey != null;
+        return storage.containsKey((String) searchKey);
     }
 
     @Override
