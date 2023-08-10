@@ -4,6 +4,7 @@ import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
@@ -61,8 +62,8 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
     }
 
     @Override
-    public Resume[] doGetAll() {
-        return Arrays.copyOf(storage, size);
+    public List<Resume> doGetAll() {
+        return List.of(Arrays.copyOf(storage, size));
     }
 
     @Override
