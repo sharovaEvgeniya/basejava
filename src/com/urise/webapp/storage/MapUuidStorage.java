@@ -6,16 +6,11 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-public class MapStorage extends AbstractStorage {
+public class MapUuidStorage extends AbstractStorage {
     private final Map<String, Resume> storage = new LinkedHashMap<>();
 
     @Override
     protected Object getSearchKey(Object uuid) {
-        for (Map.Entry<String, Resume> entry : storage.entrySet()) {
-            if (entry.getKey().equals(uuid)) {
-                return entry.getKey();
-            }
-        }
         return uuid;
     }
 
@@ -50,7 +45,7 @@ public class MapStorage extends AbstractStorage {
     }
 
     @Override
-    protected List<Resume> doGetAll() {
+    protected List<Resume> doGetAllSorted() {
         return List.of(storage.values().toArray(new Resume[0]));
     }
 
