@@ -21,7 +21,7 @@ public abstract class AbstractStorage implements Storage {
 
     protected abstract void doDelete(Object searchKey);
 
-    protected abstract List<Resume> doGetAll();
+    protected abstract List<Resume> doGetAllSorted();
 
     protected abstract int doSize();
 
@@ -56,7 +56,7 @@ public abstract class AbstractStorage implements Storage {
 
     @Override
     public List<Resume> getAllSorted() {
-        return doGetAll();
+        return doGetAllSorted();
     }
 
     @Override

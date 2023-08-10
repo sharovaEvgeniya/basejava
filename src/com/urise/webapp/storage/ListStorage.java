@@ -49,7 +49,7 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> doGetAll() {
+    public List<Resume> doGetAllSorted() {
         return List.of(storage.toArray(new Resume[0]));
     }
 
