@@ -9,16 +9,6 @@ import java.util.*;
 public abstract class AbstractStorage implements Storage {
     private static final Comparator<Resume> RESUME_FULLNAME_COMPARATOR = Comparator.comparing(Resume::getFullName);
 
-    private static class ResumeUuidComparator implements Comparator<Resume> {
-        @Override
-        public int compare(Resume o1, Resume o2) {
-            if (o1.getFullName().equals(o2.getFullName())) {
-                return o1.getFullName().compareTo(o2.getFullName());
-            }
-            return o1.getUuid().compareTo(o2.getUuid());
-        }
-    }
-
     protected abstract Object getSearchKey(Object uuid);
 
     protected abstract boolean isExist(Object searchKey);
@@ -93,5 +83,15 @@ public abstract class AbstractStorage implements Storage {
             throw new NotExistStorageException(uuid);
         }
         return searchKey;
+    }
+
+    private static class ResumeUuidComparator implements Comparator<Resume> {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            if (o1.getFullName().equals(o2.getFullName())) {
+                return o1.getFullName().compareTo(o2.getFullName());
+            }
+            return o1.getUuid().compareTo(o2.getUuid());
+        }
     }
 }
