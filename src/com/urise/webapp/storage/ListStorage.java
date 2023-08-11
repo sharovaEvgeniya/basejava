@@ -3,13 +3,11 @@ package com.urise.webapp.storage;
 import com.urise.webapp.model.Resume;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
-import java.util.TreeSet;
 
 public class ListStorage extends AbstractStorage {
     protected final List<Resume> STORAGE = new ArrayList<>();
-    private static final Comparator<Resume> RESUME_FULLNAME_COMPARATOR = Comparator.comparing(Resume::getFullName);
+
     @Override
     public Object getSearchKey(Object uuid) {
         for (int i = 0; i < STORAGE.size(); i++) {
@@ -51,25 +49,12 @@ public class ListStorage extends AbstractStorage {
     }
 
     @Override
-    public List<Resume> doGetAllSorted() {
-        Comparator<Resume> resumeComparator = RESUME_FULLNAME_COMPARATOR.thenComparing(new ResumeUuidComparator());
-        TreeSet<Resume> listSortedComparator = new TreeSet<>(resumeComparator);
-        listSortedComparator.addAll(STORAGE.stream().toList());
-        return listSortedComparator.stream().toList();
+    public List<Resume> doGetAll() {
+        return List.of(STORAGE.toArray(new Resume[0]));
     }
 
     @Override
     public int doSize() {
         return STORAGE.size();
-    }
-
-    private static class ResumeUuidComparator implements Comparator<Resume> {
-        @Override
-        public int compare(Resume o1, Resume o2) {
-            if (o1.getFullName().equals(o2.getFullName())) {
-                return o1.getFullName().compareTo(o2.getFullName());
-            }
-            return o1.getUuid().compareTo(o2.getUuid());
-        }
     }
 }
