@@ -2,16 +2,15 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage {
-    Map<String, Resume> storage = new LinkedHashMap<>();
+    private final Map<String, Resume> STORAGE = new LinkedHashMap<>();
+    private static final Comparator<Resume> RESUME_FULLNAME_COMPARATOR = Comparator.comparing(Resume::getFullName);
 
     @Override
     protected Object getSearchKey(Object uuid) {
-        return storage.get((String) uuid);
+        return STORAGE.get((String) uuid);
     }
 
     @Override
@@ -21,17 +20,17 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doClear() {
-        storage.clear();
+        STORAGE.clear();
     }
 
     @Override
     protected void doUpdate(Resume resume, Object searchKey) {
-        storage.put(resume.getUuid(), resume);
+        STORAGE.put(resume.getUuid(), resume);
     }
 
     @Override
     protected void doSave(Resume resume, Object searchKey) {
-        storage.put(resume.getUuid(), resume);
+        STORAGE.put(resume.getUuid(), resume);
     }
 
     @Override
@@ -41,16 +40,29 @@ public class MapResumeStorage extends AbstractStorage {
 
     @Override
     protected void doDelete(Object searchKey) {
-        storage.remove(((Resume) searchKey).getUuid());
+        STORAGE.remove(((Resume) searchKey).getUuid());
     }
 
     @Override
     protected List<Resume> doGetAllSorted() {
-        return List.of(storage.values().toArray(new Resume[0]));
+        Comparator<Resume> resumeComparator = RESUME_FULLNAME_COMPARATOR.thenComparing(new ResumeUuidComparator());
+        TreeSet<Resume> listSortedComparator = new TreeSet<>(resumeComparator);
+        listSortedComparator.addAll(STORAGE.values());
+        return listSortedComparator.stream().toList();
     }
 
     @Override
     protected int doSize() {
-        return storage.size();
+        return STORAGE.size();
+    }
+
+    private static class ResumeUuidComparator implements Comparator<Resume> {
+        @Override
+        public int compare(Resume o1, Resume o2) {
+            if (o1.getFullName().equals(o2.getFullName())) {
+                return o1.getFullName().compareTo(o2.getFullName());
+            }
+            return o1.getUuid().compareTo(o2.getUuid());
+        }
     }
 }

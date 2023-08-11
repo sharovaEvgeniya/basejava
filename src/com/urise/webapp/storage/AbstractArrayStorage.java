@@ -8,9 +8,10 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractArrayStorage extends AbstractStorage {
-    private final Logger log = Logger.getLogger(AbstractArrayStorage.class.getName());
+    private final Logger LOG = Logger.getLogger(AbstractArrayStorage.class.getName());
     protected static final int STORAGE_LIMIT = 10000;
-    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
+    protected final Resume[] STORAGE = new Resume[STORAGE_LIMIT];
+
     protected int size = 0;
 
     protected abstract Integer getSearchKey(Object uuid);
@@ -26,14 +27,14 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
 
     @Override
     public void doClear() {
-        Arrays.fill(storage, 0, size, null);
+        Arrays.fill(STORAGE, 0, size, null);
         size = 0;
     }
 
     @Override
     public final void doUpdate(Resume resume, Object searchKey) {
-        storage[(int) searchKey] = resume;
-        log.info("Update " + resume.getUuid() + " is correct");
+        STORAGE[(int) searchKey] = resume;
+        LOG.info("Update " + resume.getUuid() + " is correct");
     }
 
     @Override
@@ -44,26 +45,26 @@ public abstract class AbstractArrayStorage extends AbstractStorage {
         } else {
             saveResume(index, resume);
             size++;
-            log.info("Add " + resume.getUuid() + " in storage");
+            LOG.info("Add " + resume.getUuid() + " in storage");
         }
     }
 
     @Override
     public final Resume doGet(Object searchKey) {
-        log.info("get " + storage[(int) searchKey].getUuid());
-        return storage[(int) searchKey];
+        LOG.info("get " + STORAGE[(int) searchKey].getUuid());
+        return STORAGE[(int) searchKey];
     }
 
     @Override
     public final void doDelete(Object searchKey) {
         deleteResume((Integer) searchKey);
-        storage[size - 1] = null;
+        STORAGE[size - 1] = null;
         size--;
     }
 
     @Override
     public List<Resume> doGetAllSorted() {
-        return List.of(Arrays.copyOf(storage, size));
+        return List.of(Arrays.copyOf(STORAGE, size));
     }
 
     @Override
