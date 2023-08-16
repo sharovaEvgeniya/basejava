@@ -10,7 +10,7 @@ public class ArrayStorage extends AbstractArrayStorage {
      * @return array, contains only Resumes in storage (without null)
      */
     @Override
-    protected Integer getSearchKey(Object uuid) {
+    protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
             if (STORAGE[i].getUuid().equals(uuid)) {
                 return i;
