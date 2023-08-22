@@ -12,7 +12,7 @@ import static com.urise.webapp.model.SectionType.*;
 public class ResumeTestDate {
     public static void main(String[] args) {
         TextSection objectiveText = new TextSection("Ведущий стажировок и корпоративного обучения" +
-                " по Java Web и Enterprise технологиям");
+                " по Java Web и Enterprise технолoгиям");
         TextSection personalText = new TextSection("Аналитический склад ума, сильная логика, креативность, " +
                 "инициативность. Пурист кода и архитектуры.");
 
