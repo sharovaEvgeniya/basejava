@@ -68,14 +68,16 @@ public class ResumeTestDate {
         String titleAlcatel = "Инженер по аппаратному и программному тестированию";
         String descriptionAlcatel = "Тестирование, отладка, внедрение ПО цифровой " +
                 "телефонной станции Alcatel 1000 S12 (CHILL, ASM).";
+
+        LocalDate startAlcatel1 = LocalDate.of(9888, Month.SEPTEMBER, 25);
+        LocalDate endAlcatel1 = LocalDate.of(9999, Month.JANUARY, 10);
+        String titleAlcatel1 = "Инженер по аппаратному и программному тестированию";
+        Period periodAlcatel1 = new Period(startAlcatel1, endAlcatel1, titleAlcatel1, null);
         Period periodAlcatel = new Period(startAlcatel, endAlcatel, titleAlcatel, descriptionAlcatel);
+
         List<Period> periodsExperience = new ArrayList<>();
         periodsExperience.add(periodAlcatel);
-
-        Organization organizationAlcatel = new Organization("Alcatel",
-                "http://www.alcatel.ru/", periodsExperience);
-        List<Organization> listOrganizationExperience = new ArrayList<>();
-        listOrganizationExperience.add(organizationAlcatel);
+        periodsExperience.add(periodAlcatel1);
 
         LocalDate startLuxoft = LocalDate.of(2011, Month.MARCH, 19);
         LocalDate endLuxoft = LocalDate.of(2011, Month.APRIL, 13);
@@ -84,6 +86,12 @@ public class ResumeTestDate {
         Period periodLuxoft = new Period(startLuxoft, endLuxoft, titleLuxoft, descriptionLuxoft);
         List<Period> periodsEducation = new ArrayList<>();
         periodsEducation.add(periodLuxoft);
+
+        Organization organizationAlcatel = new Organization("Alcatel",
+                "http://www.alcatel.ru/", periodsExperience);
+        List<Organization> listOrganizationExperience = new ArrayList<>();
+        listOrganizationExperience.add(organizationAlcatel);
+
 
         Organization organizationLuxoft = new Organization("Luxoft", "prmotion.me", periodsEducation);
         List<Organization> listOrganizationEducation = new ArrayList<>();
@@ -136,10 +144,13 @@ public class ResumeTestDate {
                     System.out.println(entry.getKey().getTitle() + " :\n");
                     for (Organization org : organizations) {
                         System.out.println(org.title() + "   " + org.website());
-                        List<Period> periods = org.periods();
-                        for (Period period : periods) {
-                            System.out.println(period.start() + " —— " + period.end() + "  "
-                                    + period.title() + "\n" + period.description() + "\n");
+                        List<Period>[] periods = org.periods();
+                        System.out.println(periods.length);
+                        for (List<Period> periodList : periods) {
+                            for (Period period : periodList) {
+                                System.out.println(period.start() + " —— " + period.end() + "  "
+                                        + period.title() + "\n" + period.description() + "\n");
+                            }
                         }
                     }
                 }
