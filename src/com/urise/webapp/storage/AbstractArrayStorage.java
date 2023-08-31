@@ -8,7 +8,7 @@ import java.util.List;
 
 public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
     protected static final int STORAGE_LIMIT = 10000;
-    protected final Resume[] STORAGE = new Resume[STORAGE_LIMIT];
+    protected final Resume[] storage = new Resume[STORAGE_LIMIT];
 
     protected int size = 0;
 
@@ -25,13 +25,13 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     public void doClear() {
-        Arrays.fill(STORAGE, 0, size, null);
+        Arrays.fill(storage, 0, size, null);
         size = 0;
     }
 
     @Override
     public final void doUpdate(Resume resume, Integer searchKey) {
-        STORAGE[searchKey] = resume;
+        storage[searchKey] = resume;
     }
 
     @Override
@@ -47,19 +47,19 @@ public abstract class AbstractArrayStorage extends AbstractStorage<Integer> {
 
     @Override
     public final Resume doGet(Integer searchKey) {
-        return STORAGE[searchKey];
+        return storage[searchKey];
     }
 
     @Override
     public final void doDelete(Integer searchKey) {
         deleteResume(searchKey);
-        STORAGE[size - 1] = null;
+        storage[size - 1] = null;
         size--;
     }
 
     @Override
     public List<Resume> doGetAll() {
-        return List.of(Arrays.copyOf(STORAGE, size));
+        return List.of(Arrays.copyOf(storage, size));
     }
 
     @Override

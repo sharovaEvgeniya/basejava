@@ -5,12 +5,12 @@ import com.urise.webapp.model.Resume;
 import java.util.*;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
-    private final Map<String, Resume> STORAGE = new HashMap<>();
+    private final Map<String, Resume> storage = new HashMap<>();
 
 
     @Override
     protected Resume getSearchKey(String uuid) {
-        return STORAGE.get(uuid);
+        return storage.get(uuid);
     }
 
     @Override
@@ -20,17 +20,17 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected void doClear() {
-        STORAGE.clear();
+        storage.clear();
     }
 
     @Override
     protected void doUpdate(Resume resume, Resume searchKey) {
-        STORAGE.put(resume.getUuid(), resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
     protected void doSave(Resume resume, Resume searchKey) {
-        STORAGE.put(resume.getUuid(), resume);
+        storage.put(resume.getUuid(), resume);
     }
 
     @Override
@@ -40,17 +40,17 @@ public class MapResumeStorage extends AbstractStorage<Resume> {
 
     @Override
     protected void doDelete(Resume searchKey) {
-        STORAGE.remove(searchKey.getUuid());
+        storage.remove(searchKey.getUuid());
     }
 
     @Override
     protected List<Resume> doGetAll() {
-        return new ArrayList<>(STORAGE.values());
+        return new ArrayList<>(storage.values());
     }
 
     @Override
     protected int doSize() {
-        return STORAGE.size();
+        return storage.size();
     }
 
 

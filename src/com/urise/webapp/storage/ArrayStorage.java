@@ -12,7 +12,7 @@ public class ArrayStorage extends AbstractArrayStorage {
     @Override
     protected Integer getSearchKey(String uuid) {
         for (int i = 0; i < size; i++) {
-            if (STORAGE[i].getUuid().equals(uuid)) {
+            if (storage[i].getUuid().equals(uuid)) {
                 return i;
             }
         }
@@ -21,11 +21,11 @@ public class ArrayStorage extends AbstractArrayStorage {
 
     @Override
     protected void saveResume(int index, Resume resume) {
-        STORAGE[size] = resume;
+        storage[size] = resume;
     }
 
     @Override
     protected void deleteResume(int index) {
-        STORAGE[index] = STORAGE[size - 1];
+        storage[index] = storage[size - 1];
     }
 }
