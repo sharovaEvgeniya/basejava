@@ -23,15 +23,4 @@ public class ListSection extends Section {
         return Objects.equals(strings, that.strings);
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(strings);
-    }
-
-    @Override
-    public String toString() {
-        return "ListSection{" +
-                "strings=" + strings +
-                '}';
-    }
 }
