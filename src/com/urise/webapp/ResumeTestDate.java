@@ -135,11 +135,11 @@ public class ResumeTestDate {
                     List<Organization> organizations = ((CompanySection) entry.getValue()).getOrganization();
                     System.out.println(entry.getKey().getTitle() + " :\n");
                     for (Organization org : organizations) {
-                        System.out.println(org.title() + "   " + org.website());
-                        List<Period> periods = org.periods();
+                        System.out.println(org.getTitle() + "   " + org.getWebsite());
+                        List<Period> periods = org.getPeriods();
                         for (Period period : periods) {
-                            System.out.println(period.start() + " —— " + period.end() + "  "
-                                    + period.title() + "\n" + period.description() + "\n");
+                            System.out.println(period.getStart() + " —— " + period.getEnd() + "  "
+                                    + period.getTitle() + "\n" + period.getDescription() + "\n");
                         }
                     }
                 }
