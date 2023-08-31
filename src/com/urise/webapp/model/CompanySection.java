@@ -14,4 +14,24 @@ public class CompanySection extends Section {
     public List<Organization> getOrganization() {
         return organizations;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CompanySection that = (CompanySection) o;
+        return Objects.equals(organizations, that.organizations);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(organizations);
+    }
+
+    @Override
+    public String toString() {
+        return "CompanySection{" +
+                "organizations=" + organizations +
+                '}';
+    }
 }
