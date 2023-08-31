@@ -8,7 +8,7 @@ public enum ContactType {
     GITHUB("GitHub"),
     STACKOVERFLOW("StackOverflow"),
     HOMEPAGE("Домашняя страница");
-    private String title;
+    private final String title;
 
     ContactType(String title) {
         this.title = title;
@@ -16,5 +16,12 @@ public enum ContactType {
 
     public String getTitle() {
         return title;
+    }
+
+    @Override
+    public String toString() {
+        return "ContactType{" +
+                "title='" + title + '\'' +
+                '}';
     }
 }
