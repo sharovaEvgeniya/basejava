@@ -5,6 +5,7 @@ import com.urise.webapp.model.Resume;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -35,12 +36,18 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doClear() {
-
+        for (File file : directory.listFiles()) {
+            doDelete(file);
+        }
     }
 
     @Override
     protected void doUpdate(Resume resume, File file) {
-
+        try {
+            doWrite(resume, file);
+        } catch (IOException e) {
+            throw new StorageException("File not updated", resume.getUuid(), e);
+        }
     }
 
     @Override
@@ -53,26 +60,45 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-    private void doWrite(Resume resume, File file) throws IOException{
+    private void doWrite(Resume resume, File file) throws IOException {
+    }
+
+    private Resume doRead(File file) throws IOException {
+        return null;
     }
 
     @Override
     protected Resume doGet(File file) {
-        return null;
+        try {
+            return doRead(file);
+        } catch (IOException e) {
+            throw new StorageException("File not get", file.getName(), e);
+        }
     }
+
 
     @Override
     protected void doDelete(File file) {
-
+        if (!file.delete()) {
+            throw new StorageException("File not deleted", file.getName());
+        }
     }
 
     @Override
     protected List<Resume> doGetAll() {
-        return null;
+        List<Resume> resumes = new ArrayList<>();
+        for (File file : directory.listFiles()) {
+            try {
+                resumes.add(doRead(file));
+            } catch (IOException e) {
+                throw new StorageException("resume not added", file.getName(), e);
+            }
+        }
+        return resumes;
     }
 
     @Override
     protected int doSize() {
-        return 0;
+        return (int) directory.length();
     }
 }
