@@ -36,7 +36,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doClear() {
-        for (File file : directory.listFiles()) {
+        File[] files = fileIsNotNull(directory);
+        for (File file : files) {
             doDelete(file);
         }
     }
@@ -53,18 +54,13 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doSave(Resume resume, File file) {
         try {
-            file.createNewFile();
+            if (!file.createNewFile()) {
+                throw new StorageException("File is not created", file.getName());
+            }
             doWrite(resume, file);
         } catch (IOException e) {
             throw new StorageException("Io error", file.getName(), e);
         }
-    }
-
-    private void doWrite(Resume resume, File file) throws IOException {
-    }
-
-    private Resume doRead(File file) throws IOException {
-        return null;
     }
 
     @Override
@@ -87,7 +83,8 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> doGetAll() {
         List<Resume> resumes = new ArrayList<>();
-        for (File file : directory.listFiles()) {
+        File[] files = fileIsNotNull(directory);
+        for (File file : files) {
             try {
                 resumes.add(doRead(file));
             } catch (IOException e) {
@@ -99,6 +96,21 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected int doSize() {
-        return (int) directory.length();
+        return fileIsNotNull(directory).length;
+    }
+
+    private void doWrite(Resume resume, File file) throws IOException {
+    }
+
+    private Resume doRead(File file) throws IOException {
+        return null;
+    }
+
+    private File[] fileIsNotNull(File file) {
+        File[] files = file.listFiles();
+        if (files == null) {
+            throw new StorageException("IO exception in", directory.getName());
+        }
+        return files;
     }
 }
