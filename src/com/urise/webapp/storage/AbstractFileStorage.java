@@ -24,6 +24,10 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         this.directory = directory;
     }
 
+    protected abstract void doWrite(Resume resume, File file) throws IOException;
+
+    protected abstract Resume doRead(File file) throws IOException;
+
     @Override
     protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
@@ -36,7 +40,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
 
     @Override
     protected void doClear() {
-        File[] files = fileIsNotNull(directory);
+        File[] files = getCheckedListFiles(directory);
         for (File file : files) {
             doDelete(file);
         }
@@ -72,7 +76,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
     }
 
-
     @Override
     protected void doDelete(File file) {
         if (!file.delete()) {
@@ -83,30 +86,19 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected List<Resume> doGetAll() {
         List<Resume> resumes = new ArrayList<>();
-        File[] files = fileIsNotNull(directory);
+        File[] files = getCheckedListFiles(directory);
         for (File file : files) {
-            try {
-                resumes.add(doRead(file));
-            } catch (IOException e) {
-                throw new StorageException("resume not added", file.getName(), e);
-            }
+            resumes.add(doGet(file));
         }
         return resumes;
     }
 
     @Override
     protected int doSize() {
-        return fileIsNotNull(directory).length;
+        return getCheckedListFiles(directory).length;
     }
 
-    private void doWrite(Resume resume, File file) throws IOException {
-    }
-
-    private Resume doRead(File file) throws IOException {
-        return null;
-    }
-
-    private File[] fileIsNotNull(File file) {
+    private File[] getCheckedListFiles(File file) {
         File[] files = file.listFiles();
         if (files == null) {
             throw new StorageException("IO exception in", directory.getName());
