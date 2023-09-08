@@ -25,13 +25,13 @@ public class ResumeTestData {
 
         LocalDate start1 = LocalDate.of(9999, Month.SEPTEMBER, 1);
         LocalDate end1 = LocalDate.of(9999, Month.JANUARY, 1);
-        Period period1 = new Period(start1, end1, "title", "description");
+        Organization.Period period1 = new Organization.Period(start1, end1, "title", "description");
 
         LocalDate start2 = LocalDate.of(8888, Month.OCTOBER, 1);
         LocalDate end2 = LocalDate.of(8888, Month.NOVEMBER, 1);
-        Period period2 = new Period(start2, end2, "title", "description");
+        Organization.Period period2 = new Organization.Period(start2, end2, "title", "description");
 
-        List<Period> experienceOrEducation = new ArrayList<>();
+        List<Organization.Period> experienceOrEducation = new ArrayList<>();
         experienceOrEducation.add(period1);
         experienceOrEducation.add(period2);
 
@@ -45,8 +45,8 @@ public class ResumeTestData {
         sections.put(PERSONAL, new TextSection("personal"));
         sections.put(ACHIEVEMENT, new ListSection(achievementOrQualification));
         sections.put(QUALIFICATION, new ListSection(achievementOrQualification));
-        sections.put(EXPERIENCE, new CompanySection(organizations));
-        sections.put(EDUCATION, new CompanySection(organizations));
+        sections.put(EXPERIENCE, new OrganizationSection(organizations));
+        sections.put(EDUCATION, new OrganizationSection(organizations));
 
         return new Resume(uuid, fullName, contacts, sections);
     }
@@ -72,12 +72,12 @@ public class ResumeTestData {
                     }
                 }
                 case EXPERIENCE, EDUCATION -> {
-                    List<Organization> organizations = ((CompanySection) entry.getValue()).getOrganization();
+                    List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganization();
                     System.out.println(entry.getKey().getTitle() + " :\n");
                     for (Organization org : organizations) {
                         System.out.println(org.title() + "   " + org.website());
-                        List<Period> periods = org.periods();
-                        for (Period periodList : periods) {
+                        List<Organization.Period> periods = org.periods();
+                        for (Organization.Period periodList : periods) {
                             System.out.println(periodList.start() + " —— " + periodList.end() + "  "
                                     + periodList.title() + "\n" + periodList.description() + "\n");
                         }
