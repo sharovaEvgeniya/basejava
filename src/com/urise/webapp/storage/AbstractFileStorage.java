@@ -72,7 +72,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         try {
             return doRead(file);
         } catch (IOException e) {
-            throw new StorageException("File not get", file.getName(), e);
+            throw new StorageException("File is not get", file.getName(), e);
         }
     }
 
