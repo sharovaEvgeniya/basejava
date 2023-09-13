@@ -8,6 +8,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,8 @@ import static com.urise.webapp.ResumeTestData.createResume;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
-
+    protected static final File STORAGE_DIR =
+            new File("/Users/evgeniasharova/Documents/idea/basejava/storage");
     private static final String UUID_1 = "uuid1";
     private static final String UUID_2 = "uuid2";
     private static final String UUID_3 = "uuid3";

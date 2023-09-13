@@ -1,5 +1,6 @@
 package com.urise.webapp.storage;
 
+import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
 
 import java.io.*;
@@ -18,6 +19,10 @@ public class ObjectStreamStorage extends AbstractFileStorage {
 
     @Override
     protected Resume doRead(InputStream inputStream) throws IOException {
-        return null;
+        try(ObjectInputStream objectInputStream = new ObjectInputStream(inputStream)) {
+            return (Resume) objectInputStream.readObject();
+        } catch (ClassNotFoundException e) {
+            throw new StorageException("Error read resume", null, e);
+        }
     }
 }
