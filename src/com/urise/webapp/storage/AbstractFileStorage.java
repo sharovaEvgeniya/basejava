@@ -2,6 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
+
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -47,9 +48,9 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            doWrite(resume,new BufferedOutputStream( new FileOutputStream(file)));
+            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
-            throw new StorageException("File not updated", resume.getUuid(), e);
+            throw new StorageException("File is not updated", resume.getUuid(), e);
         }
     }
 
@@ -63,17 +64,12 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         } catch (IOException e) {
             throw new StorageException("Io error", file.getName(), e);
         }
-//        try{
-//            file.createNewFile();
-//        } catch (IOException e) {
-//            throw new StorageException("Io error", file.getName(), e);
-//        }
     }
 
     @Override
     protected Resume doGet(File file) {
         try {
-            return doRead(new BufferedInputStream( new FileInputStream(file)));
+            return doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File is not get", file.getName(), e);
         }
@@ -82,7 +78,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doDelete(File file) {
         if (!file.delete()) {
-            throw new StorageException("File not deleted", file.getName());
+            throw new StorageException("File is not deleted", file.getName());
         }
     }
 
