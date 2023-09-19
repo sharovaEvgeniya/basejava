@@ -39,7 +39,7 @@ public class MainArray {
                     printAll();
                 }
                 case "update uuid fullName" -> {
-                    resume =new Resume(uuid, params[2]);
+                    resume = new Resume(uuid, params[2]);
                     ARRAY_STORAGE.update(resume);
                     printAll();
                 }

@@ -2,11 +2,13 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.model.Resume;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public class MapResumeStorage extends AbstractStorage<Resume> {
     private final Map<String, Resume> storage = new HashMap<>();
-
 
     @Override
     protected Resume getSearchKey(String uuid) {
