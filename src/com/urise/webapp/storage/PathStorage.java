@@ -23,6 +23,7 @@ public class PathStorage extends AbstractStorage<Path> {
             throw new IllegalArgumentException(dir + " is not directory or not writable");
         }
     }
+
     @Override
     protected Path getSearchKey(String uuid) {
         return directory.resolve(uuid);
@@ -45,7 +46,7 @@ public class PathStorage extends AbstractStorage<Path> {
     @Override
     protected void doUpdate(Resume resume, Path path) {
         try {
-           serializeStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
+            serializeStrategy.doWrite(resume, new BufferedOutputStream(Files.newOutputStream(path)));
         } catch (IOException e) {
             throw new StorageException("Path is not update", resume.getUuid(), e);
         }

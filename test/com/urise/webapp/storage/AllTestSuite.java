@@ -12,6 +12,7 @@ import org.junit.runners.Suite;
         SortedArrayStorageTest.class,
         ObjectStreamStorageTest.class,
         ObjectStreamPathStorageTest.class
+
 })
 
 public class AllTestSuite {

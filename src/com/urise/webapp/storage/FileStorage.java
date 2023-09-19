@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public  class FileStorage extends AbstractStorage<File> {
+public class FileStorage extends AbstractStorage<File> {
     private final SerializeStrategy serializeStrategy;
     private final File directory;
 
@@ -24,6 +24,7 @@ public  class FileStorage extends AbstractStorage<File> {
         }
         this.directory = directory;
     }
+
     @Override
     protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
