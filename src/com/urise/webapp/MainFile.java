@@ -28,7 +28,7 @@ public class MainFile {
         if (files != null) {
             for (File directory : files) {
                 if (directory.isFile()) {
-                    System.out.println("File : " + directory.getName());
+                    System.out.println("  File : " + directory.getName());
                 }
                 if (directory.isDirectory()) {
                     System.out.println("Directory : " + directory.getName());
