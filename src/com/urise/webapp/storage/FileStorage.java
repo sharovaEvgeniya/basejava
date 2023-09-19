@@ -8,10 +8,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public abstract class AbstractFileStorage extends AbstractStorage<File> {
+public  class FileStorage extends AbstractStorage<File> {
+    private final SerializeStrategy serializeStrategy;
     private final File directory;
 
-    protected AbstractFileStorage(File directory) {
+    protected FileStorage(SerializeStrategy serializeStrategy, File directory) {
+        this.serializeStrategy = serializeStrategy;
         Objects.requireNonNull(directory, "Directory must not be null");
         if (!directory.isDirectory()) {
             throw new IllegalArgumentException(directory.getAbsolutePath() + " is not directory");
@@ -22,11 +24,6 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
         }
         this.directory = directory;
     }
-
-    protected abstract void doWrite(Resume resume, OutputStream outputStream) throws IOException;
-
-    protected abstract Resume doRead(InputStream inputStream) throws IOException;
-
     @Override
     protected File getSearchKey(String uuid) {
         return new File(directory, uuid);
@@ -48,7 +45,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected void doUpdate(Resume resume, File file) {
         try {
-            doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
+            serializeStrategy.doWrite(resume, new BufferedOutputStream(new FileOutputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File is not updated", resume.getUuid(), e);
         }
@@ -69,7 +66,7 @@ public abstract class AbstractFileStorage extends AbstractStorage<File> {
     @Override
     protected Resume doGet(File file) {
         try {
-            return doRead(new BufferedInputStream(new FileInputStream(file)));
+            return serializeStrategy.doRead(new BufferedInputStream(new FileInputStream(file)));
         } catch (IOException e) {
             throw new StorageException("File is not get", file.getName(), e);
         }
