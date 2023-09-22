@@ -8,7 +8,7 @@ public class MainFile {
         File file = new File(".gitignore");
         System.out.println(file.getCanonicalPath());
 
-        File dir = new File("./src/com/urise/webapp");
+        File dir = new File("./src");
         recurse(dir, "");
     }
 
