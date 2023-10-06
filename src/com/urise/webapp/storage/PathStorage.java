@@ -2,7 +2,7 @@ package com.urise.webapp.storage;
 
 import com.urise.webapp.exception.StorageException;
 import com.urise.webapp.model.Resume;
-import com.urise.webapp.storage.strategy.SerializeStrategy;
+import com.urise.webapp.storage.serializer.StreamSerializer;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
@@ -11,15 +11,16 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class PathStorage extends AbstractStorage<Path> {
-    private final SerializeStrategy serializeStrategy;
+    private final StreamSerializer serializeStrategy;
     private final Path directory;
 
-    public PathStorage(SerializeStrategy serializeStrategy, String dir) {
+    public PathStorage(StreamSerializer serializeStrategy, String dir) {
         this.serializeStrategy = serializeStrategy;
         directory = Paths.get(dir);
         Objects.requireNonNull(directory, "Directory must not be null");
@@ -40,11 +41,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected void doClear() {
-        try {
-            Files.list(directory).forEach(this::doDelete);
-        } catch (IOException e) {
-            throw new StorageException("Path delete error", null, e);
-        }
+        getFilesList().forEach(this::doDelete);
     }
 
     @Override
@@ -88,12 +85,7 @@ public class PathStorage extends AbstractStorage<Path> {
 
     @Override
     protected List<Resume> doGetAll() {
-        List<Resume> resumes = new ArrayList<>();
-        File[] files = getCheckedListFiles(directory);
-        for (File file : files) {
-            resumes.add(doGet(file.toPath()));
-        }
-        return resumes;
+        return getFilesList().map(this::doGet).collect(Collectors.toList());
     }
 
     @Override
@@ -107,5 +99,13 @@ public class PathStorage extends AbstractStorage<Path> {
             throw new StorageException("IO exception in", directory.getFileName().toString());
         }
         return files;
+    }
+
+    private Stream<Path> getFilesList() {
+        try {
+            return Files.list(directory);
+        } catch (IOException e) {
+            throw new StorageException("Directory read error", e);
+        }
     }
 }
