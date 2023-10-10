@@ -74,18 +74,18 @@ public class ResumeTestData {
                         System.out.println("-" + string + "\n");
                     }
                 }
-                case EXPERIENCE, EDUCATION -> {
-                    List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganization();
-                    System.out.println(entry.getKey().getTitle() + " :\n");
-                    for (Organization org : organizations) {
-                        System.out.println(org.title() + "   " + org.website());
-                        List<Organization.Period> periods = org.periods();
-                        for (Organization.Period periodList : periods) {
-                            System.out.println(periodList.start() + " —— " + periodList.end() + "  "
-                                    + periodList.title() + "\n" + periodList.description() + "\n");
-                        }
-                    }
-                }
+//                case EXPERIENCE, EDUCATION -> {
+//                    List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganization();
+//                    System.out.println(entry.getKey().getTitle() + " :\n");
+//                    for (Organization org : organizations) {
+//                        System.out.println(org.title() + "   " + org.website());
+//                        List<Organization.Period> periods = org.periods();
+//                        for (Organization.Period periodList : periods) {
+//                            System.out.println(periodList.start() + " —— " + periodList.end() + "  "
+//                                    + periodList.title() + "\n" + periodList.description() + "\n");
+//                        }
+//                    }
+//                }
             }
         }
     }
