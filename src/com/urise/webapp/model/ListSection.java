@@ -8,7 +8,10 @@ import java.util.Objects;
 public class ListSection extends Section {
     @Serial
     private static final long serialVersionUID = 1L;
-    private final List<String> strings;
+    private List<String> strings;
+
+    public ListSection() {
+    }
 
     public ListSection(String... strings) {
         this(Arrays.asList(strings));
