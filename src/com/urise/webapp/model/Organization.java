@@ -33,7 +33,6 @@ public final class Organization implements Serializable {
 
     public Organization(String title, String website, List<Period> periods) {
         Objects.requireNonNull(title, "Title must not be null");
-        Objects.requireNonNull(website, "Website must not be null");
         Objects.requireNonNull(periods, "Periods must not be null");
         this.title = title;
         this.website = website;
@@ -65,13 +64,11 @@ public final class Organization implements Serializable {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Organization) obj;
-        return Objects.equals(this.title, that.title) &&
-                Objects.equals(this.website, that.website) &&
-                Objects.equals(this.periods, that.periods);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Organization that = (Organization) o;
+        return Objects.equals(title, that.title) && Objects.equals(website, that.website) && Objects.equals(periods, that.periods);
     }
 
     @Override

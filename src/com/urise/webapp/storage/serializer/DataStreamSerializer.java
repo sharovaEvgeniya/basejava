@@ -1,8 +1,10 @@
 package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.*;
+import com.urise.webapp.util.DateUtil;
 
 import java.io.*;
+import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +45,11 @@ public class DataStreamSerializer implements StreamSerializer {
                             dataOutputStream.writeUTF(organization.website());
                             List<Organization.Period> periods = organization.periods();
                             dataOutputStream.writeInt(periods.size());
-                            for (Organization.Period periodList : periods) {
-                                dataOutputStream.writeInt(periodList.start().getYear());
-                                dataOutputStream.writeUTF(periodList.start().getMonth().name());
-                                dataOutputStream.writeInt(periodList.end().getYear());
-                                dataOutputStream.writeUTF(periodList.end().getMonth().name());
-                                dataOutputStream.writeUTF(periodList.title());
-                                dataOutputStream.writeUTF(periodList.description());
+                            for (Organization.Period period : periods) {
+                                localDateWrite(dataOutputStream, period.start());
+                                localDateWrite(dataOutputStream, period.end());
+                                dataOutputStream.writeUTF(period.title());
+                                dataOutputStream.writeUTF(period.description());
                             }
                         }
                     }
@@ -88,18 +88,15 @@ public class DataStreamSerializer implements StreamSerializer {
                         for (int j = 0; j < sizeOrg; j++) {
                             Organization organization = new Organization();
                             organization.setTitle(dataInputStream.readUTF());
-                            organization.setWebsite(dataInputStream.readUTF());
+                            organization.setWebsite(fieldNotNull(dataInputStream.readUTF()));
                             List<Organization.Period> periods = new ArrayList<>();
                             int sizePer = dataInputStream.readInt();
                             for (int k = 0; k < sizePer; k++) {
-                                int startYear = dataInputStream.readInt();
-                                String startMonth = dataInputStream.readUTF();
-                                int endYear = dataInputStream.readInt();
-                                String endMonth = dataInputStream.readUTF();
+                                LocalDate start = localDateRead(dataInputStream);
+                                LocalDate end = localDateRead(dataInputStream);
                                 String title = dataInputStream.readUTF();
-                                String description = dataInputStream.readUTF();
-                                periods.add(new Organization.Period(startYear, Month.valueOf(startMonth), endYear,
-                                        Month.valueOf(endMonth), title, description));
+                                String description = fieldNotNull(dataInputStream.readUTF());
+                                periods.add(new Organization.Period(start, end, title, description));
                                 organization.setPeriods(periods);
                             }
                             organizationList.add(organization);
@@ -111,4 +108,20 @@ public class DataStreamSerializer implements StreamSerializer {
             return resume;
         }
     }
+
+    private String fieldNotNull(String str) {
+        return str != null ? str : "empty field";
+//        return str != null ? str : "";
+    }
+
+    private void localDateWrite(DataOutputStream dataOutputStream, LocalDate localDate) throws IOException {
+        dataOutputStream.writeInt(localDate.getYear());
+        dataOutputStream.writeUTF(localDate.getMonth().name());
+    }
+
+    private LocalDate localDateRead(DataInputStream dataInputStream) throws IOException {
+        return DateUtil.of(dataInputStream.readInt(), Month.valueOf(dataInputStream.readUTF()));
+    }
 }
+
+
