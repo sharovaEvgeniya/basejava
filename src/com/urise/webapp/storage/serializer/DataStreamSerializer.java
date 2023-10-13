@@ -2,11 +2,13 @@ package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.*;
 import com.urise.webapp.util.DateUtil;
+import com.urise.webapp.util.WriteElement;
 
 import java.io.*;
 import java.time.LocalDate;
 import java.time.Month;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -16,26 +18,19 @@ public class DataStreamSerializer implements StreamSerializer {
         try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
             dataOutputStream.writeUTF(resume.getUuid());
             dataOutputStream.writeUTF(resume.getFullName());
-            Map<ContactType, String> contacts = resume.getContacts();
-            dataOutputStream.writeInt(contacts.size());
-            for (Map.Entry<ContactType, String> entry : resume.getContacts().entrySet()) {
+            WriteElement<Map.Entry<ContactType, String>> contactEntry = entry -> {
                 dataOutputStream.writeUTF(entry.getKey().name());
                 dataOutputStream.writeUTF(entry.getValue());
-            }
-            Map<SectionType, Section> sections = resume.getSections();
-            dataOutputStream.writeInt(sections.size());
-            for (Map.Entry<SectionType, Section> entry : resume.getSections().entrySet()) {
+            };
+            writeWithException(resume.getContacts().entrySet(), dataOutputStream, contactEntry);
+            WriteElement<Map.Entry<SectionType, Section>> sectionEntry = entry -> {
                 dataOutputStream.writeUTF(entry.getKey().name());
                 switch (entry.getKey()) {
                     case OBJECTIVE, PERSONAL ->
                             dataOutputStream.writeUTF(((TextSection) entry.getValue()).getContent());
-
                     case ACHIEVEMENT, QUALIFICATION -> {
                         List<String> strings = ((ListSection) entry.getValue()).getStrings();
-                        dataOutputStream.writeInt(strings.size());
-                        for (String str : strings) {
-                            dataOutputStream.writeUTF(str);
-                        }
+                        writeWithException(strings, dataOutputStream, dataOutputStream::writeUTF);
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganization();
@@ -54,7 +49,8 @@ public class DataStreamSerializer implements StreamSerializer {
                         }
                     }
                 }
-            }
+            };
+            writeWithException(resume.getSections().entrySet(), dataOutputStream, sectionEntry);
         }
     }
 
@@ -88,14 +84,14 @@ public class DataStreamSerializer implements StreamSerializer {
                         for (int j = 0; j < sizeOrg; j++) {
                             Organization organization = new Organization();
                             organization.setTitle(dataInputStream.readUTF());
-                            organization.setWebsite(fieldNotNull(dataInputStream.readUTF()));
+                            organization.setWebsite(dataInputStream.readUTF());
                             List<Organization.Period> periods = new ArrayList<>();
                             int sizePer = dataInputStream.readInt();
                             for (int k = 0; k < sizePer; k++) {
                                 LocalDate start = localDateRead(dataInputStream);
                                 LocalDate end = localDateRead(dataInputStream);
                                 String title = dataInputStream.readUTF();
-                                String description = fieldNotNull(dataInputStream.readUTF());
+                                String description = dataInputStream.readUTF();
                                 periods.add(new Organization.Period(start, end, title, description));
                                 organization.setPeriods(periods);
                             }
@@ -109,11 +105,6 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private String fieldNotNull(String str) {
-        return str != null ? str : "empty field";
-//        return str != null ? str : "";
-    }
-
     private void localDateWrite(DataOutputStream dataOutputStream, LocalDate localDate) throws IOException {
         dataOutputStream.writeInt(localDate.getYear());
         dataOutputStream.writeUTF(localDate.getMonth().name());
@@ -121,6 +112,12 @@ public class DataStreamSerializer implements StreamSerializer {
 
     private LocalDate localDateRead(DataInputStream dataInputStream) throws IOException {
         return DateUtil.of(dataInputStream.readInt(), Month.valueOf(dataInputStream.readUTF()));
+    }
+
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dataOutputStream,
+                                        WriteElement<T> writeElement) throws IOException {
+        dataOutputStream.writeInt(collection.size());
+        for (T elem : collection) writeElement.write(elem);
     }
 }
 

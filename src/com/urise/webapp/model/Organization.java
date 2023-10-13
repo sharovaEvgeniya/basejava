@@ -35,7 +35,7 @@ public final class Organization implements Serializable {
         Objects.requireNonNull(title, "Title must not be null");
         Objects.requireNonNull(periods, "Periods must not be null");
         this.title = title;
-        this.website = website;
+        this.website = website != null ? website : "";
         this.periods = periods;
     }
 
@@ -113,7 +113,7 @@ public final class Organization implements Serializable {
             this.start = start;
             this.end = end;
             this.title = title;
-            this.description = description;
+            this.description = description != null ? description : "";
         }
 
         public LocalDate start() {
