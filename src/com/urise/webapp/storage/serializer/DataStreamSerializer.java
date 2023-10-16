@@ -10,49 +10,42 @@ import java.time.Month;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Map;
 
 public class DataStreamSerializer implements StreamSerializer {
     @Override
     public void doWrite(Resume resume, OutputStream outputStream) throws IOException {
-        try (DataOutputStream dataOutputStream = new DataOutputStream(outputStream)) {
-            dataOutputStream.writeUTF(resume.getUuid());
-            dataOutputStream.writeUTF(resume.getFullName());
-            WriteElement<Map.Entry<ContactType, String>> contactEntry = entry -> {
-                dataOutputStream.writeUTF(entry.getKey().name());
-                dataOutputStream.writeUTF(entry.getValue());
-            };
-            writeWithException(resume.getContacts().entrySet(), dataOutputStream, contactEntry);
-            WriteElement<Map.Entry<SectionType, Section>> sectionEntry = entry -> {
-                dataOutputStream.writeUTF(entry.getKey().name());
-                switch (entry.getKey()) {
-                    case OBJECTIVE, PERSONAL ->
-                            dataOutputStream.writeUTF(((TextSection) entry.getValue()).getContent());
-                    case ACHIEVEMENT, QUALIFICATION -> {
-                        List<String> strings = ((ListSection) entry.getValue()).getStrings();
-                        writeWithException(strings, dataOutputStream, dataOutputStream::writeUTF);
-                    }
-                    case EXPERIENCE, EDUCATION -> {
-                        List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganization();
-                        dataOutputStream.writeInt(organizations.size());
-                        for (Organization organization : organizations) {
-                            dataOutputStream.writeUTF(organization.title());
-                            dataOutputStream.writeUTF(organization.website());
-                            List<Organization.Period> periods = organization.periods();
-                            dataOutputStream.writeInt(periods.size());
-                            for (Organization.Period period : periods) {
-                                localDateWrite(dataOutputStream, period.start());
-                                localDateWrite(dataOutputStream, period.end());
-                                dataOutputStream.writeUTF(period.title());
-                                dataOutputStream.writeUTF(period.description());
-                            }
-                        }
-                    }
+        try (DataOutputStream dos = new DataOutputStream(outputStream)) {
+            dos.writeUTF(resume.getUuid());
+            dos.writeUTF(resume.getFullName());
+
+            writeWithException(resume.getContacts().entrySet(), dos, entry -> {
+                dos.writeUTF(entry.getKey().name());
+                dos.writeUTF(entry.getValue());
+            });
+
+            writeWithException(resume.getSections().entrySet(), dos, entry -> {
+                final SectionType sectionType = entry.getKey();
+                dos.writeUTF(sectionType.name());
+                switch (sectionType) {
+                    case OBJECTIVE, PERSONAL -> dos.writeUTF(((TextSection) entry.getValue()).getContent());
+                    case ACHIEVEMENT, QUALIFICATION ->
+                            writeWithException(((ListSection) entry.getValue()).getStrings(), dos, dos::writeUTF);
+                    case EXPERIENCE, EDUCATION ->
+                            writeWithException(((OrganizationSection) entry.getValue()).getOrganization(), dos, organization -> {
+                                dos.writeUTF(organization.title());
+                                dos.writeUTF(organization.website());
+                                writeWithException(organization.periods(), dos, period -> {
+                                    localDateWrite(dos, period.start());
+                                    localDateWrite(dos, period.end());
+                                    dos.writeUTF(period.title());
+                                    dos.writeUTF(period.description());
+                                });
+                            });
                 }
-            };
-            writeWithException(resume.getSections().entrySet(), dataOutputStream, sectionEntry);
+            });
         }
     }
+
 
     @Override
     public Resume doRead(InputStream inputStream) throws IOException {
