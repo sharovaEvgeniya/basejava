@@ -58,11 +58,8 @@ public class DataStreamSerializer implements StreamSerializer {
                 final SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
-                    case ACHIEVEMENT, QUALIFICATION -> {
-                        List<String> list = new ArrayList<>();
-                        readCollectionWithException(dis, () -> list.add(dis.readUTF()));
-                        resume.addSection(sectionType, new ListSection(list));
-                    }
+                    case ACHIEVEMENT, QUALIFICATION ->
+                            resume.addSection(sectionType, new ListSection(readCollectionWithException(dis, dis::readUTF)));
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> organizationList = new ArrayList<>();
                         readCollectionWithException(dis, () -> {
@@ -98,18 +95,18 @@ public class DataStreamSerializer implements StreamSerializer {
         return DateUtil.of(dis.readInt(), Month.valueOf(dis.readUTF()));
     }
 
-    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos,
-                                        WriteCollection<T> writeCollection) throws IOException {
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos, WriteCollection<T> writeCollection) throws IOException {
         dos.writeInt(collection.size());
         for (T elem : collection) writeCollection.write(elem);
     }
 
-    private <T> void readCollectionWithException(DataInputStream dis, ReadCollection<T> readCollection) throws IOException {
+    private <T> List<T> readCollectionWithException(DataInputStream dis, ReadCollection<T> readCollection) throws IOException {
         List<T> list = new ArrayList<>();
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
             list.add(readCollection.read());
         }
+        return list;
     }
 
     private void readElementWithException(DataInputStream dis, ReadElement readElement) throws IOException {
