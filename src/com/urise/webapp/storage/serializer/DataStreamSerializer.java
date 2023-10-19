@@ -60,26 +60,11 @@ public class DataStreamSerializer implements StreamSerializer {
                     case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATION ->
                             resume.addSection(sectionType, new ListSection(readCollectionWithException(dis, dis::readUTF)));
-                    case EXPERIENCE, EDUCATION -> {
-                        List<Organization> organizationList = new ArrayList<>();
-                        readCollectionWithException(dis, () -> {
-                            Organization organization = new Organization();
-                            organization.setTitle(dis.readUTF());
-                            organization.setWebsite(dis.readUTF());
-                            List<Organization.Period> periods = new ArrayList<>();
-                            readCollectionWithException(dis, () -> {
-                                LocalDate start = localDateRead(dis);
-                                LocalDate end = localDateRead(dis);
-                                String title = dis.readUTF();
-                                String description = dis.readUTF();
-                                periods.add(new Organization.Period(start, end, title, description));
-                                organization.setPeriods(periods);
-                                return organization;
-                            });
-                            return organizationList.add(organization);
-                        });
-                        resume.addSection(sectionType, new OrganizationSection(organizationList));
-                    }
+                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType,
+                            new OrganizationSection(
+                                    readCollectionWithException(dis, () ->
+                                            new Organization(dis.readUTF(), dis.readUTF(), readCollectionWithException(dis, () ->
+                                                    new Organization.Period(localDateRead(dis), localDateRead(dis), dis.readUTF(), dis.readUTF()))))));
                 }
             });
             return resume;
