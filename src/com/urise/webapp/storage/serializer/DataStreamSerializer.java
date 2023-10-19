@@ -2,8 +2,9 @@ package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.*;
 import com.urise.webapp.util.DateUtil;
+import com.urise.webapp.util.ReadCollection;
 import com.urise.webapp.util.ReadElement;
-import com.urise.webapp.util.WriteElement;
+import com.urise.webapp.util.WriteCollection;
 
 import java.io.*;
 import java.time.LocalDate;
@@ -49,31 +50,27 @@ public class DataStreamSerializer implements StreamSerializer {
 
     public Resume doRead(InputStream inputStream) throws IOException {
         try (DataInputStream dis = new DataInputStream(inputStream)) {
-            String uuid = dis.readUTF();
-            String fullName = dis.readUTF();
-            Resume resume = new Resume(uuid, fullName);
-            int sizeContactType = dis.readInt();
-            for (int i = 0; i < sizeContactType; i++) {
-                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
-            }
-            int sizeSectionType = dis.readInt();
-            for (int i = 0; i < sizeSectionType; i++) {
-                SectionType sectionType = SectionType.valueOf(dis.readUTF());
+            Resume resume = new Resume(dis.readUTF(), dis.readUTF());
+
+            readElementWithException(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+
+            readElementWithException(dis, () -> {
+                final SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
                     case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATION -> {
                         List<String> list = new ArrayList<>();
-                        readWithException(dis, () -> list.add(dis.readUTF()));
+                        readCollectionWithException(dis, () -> list.add(dis.readUTF()));
                         resume.addSection(sectionType, new ListSection(list));
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> organizationList = new ArrayList<>();
-                        readWithException(dis, () -> {
+                        readCollectionWithException(dis, () -> {
                             Organization organization = new Organization();
                             organization.setTitle(dis.readUTF());
                             organization.setWebsite(dis.readUTF());
                             List<Organization.Period> periods = new ArrayList<>();
-                            readWithException(dis, () -> {
+                            readCollectionWithException(dis, () -> {
                                 LocalDate start = localDateRead(dis);
                                 LocalDate end = localDateRead(dis);
                                 String title = dis.readUTF();
@@ -87,7 +84,7 @@ public class DataStreamSerializer implements StreamSerializer {
                         resume.addSection(sectionType, new OrganizationSection(organizationList));
                     }
                 }
-            }
+            });
             return resume;
         }
     }
@@ -102,16 +99,23 @@ public class DataStreamSerializer implements StreamSerializer {
     }
 
     private <T> void writeWithException(Collection<T> collection, DataOutputStream dos,
-                                        WriteElement<T> writeElement) throws IOException {
+                                        WriteCollection<T> writeCollection) throws IOException {
         dos.writeInt(collection.size());
-        for (T elem : collection) writeElement.write(elem);
+        for (T elem : collection) writeCollection.write(elem);
     }
 
-    private <T> void readWithException(DataInputStream dis, ReadElement<T> readElement) throws IOException {
+    private <T> void readCollectionWithException(DataInputStream dis, ReadCollection<T> readCollection) throws IOException {
         List<T> list = new ArrayList<>();
         int size = dis.readInt();
         for (int i = 0; i < size; i++) {
-            list.add(readElement.read());
+            list.add(readCollection.read());
+        }
+    }
+
+    private void readElementWithException(DataInputStream dis, ReadElement readElement) throws IOException {
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            readElement.read();
         }
     }
 }
