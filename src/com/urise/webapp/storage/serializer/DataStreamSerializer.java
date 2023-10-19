@@ -2,6 +2,7 @@ package com.urise.webapp.storage.serializer;
 
 import com.urise.webapp.model.*;
 import com.urise.webapp.util.DateUtil;
+import com.urise.webapp.util.ReadElement;
 import com.urise.webapp.util.WriteElement;
 
 import java.io.*;
@@ -46,50 +47,43 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-
-    @Override
     public Resume doRead(InputStream inputStream) throws IOException {
-        try (DataInputStream dataInputStream = new DataInputStream(inputStream)) {
-            String uuid = dataInputStream.readUTF();
-            String fullName = dataInputStream.readUTF();
+        try (DataInputStream dis = new DataInputStream(inputStream)) {
+            String uuid = dis.readUTF();
+            String fullName = dis.readUTF();
             Resume resume = new Resume(uuid, fullName);
-            int sizeContactType = dataInputStream.readInt();
+            int sizeContactType = dis.readInt();
             for (int i = 0; i < sizeContactType; i++) {
-                resume.addContact(ContactType.valueOf(dataInputStream.readUTF()), dataInputStream.readUTF());
+                resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF());
             }
-            int sizeSectionType = dataInputStream.readInt();
+            int sizeSectionType = dis.readInt();
             for (int i = 0; i < sizeSectionType; i++) {
-                SectionType sectionType = SectionType.valueOf(dataInputStream.readUTF());
+                SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
-                    case PERSONAL, OBJECTIVE ->
-                            resume.addSection(sectionType, new TextSection(dataInputStream.readUTF()));
+                    case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATION -> {
                         List<String> list = new ArrayList<>();
-                        int size = dataInputStream.readInt();
-                        for (int j = 0; j < size; j++) {
-                            list.add(dataInputStream.readUTF());
-                        }
+                        readWithException(dis, () -> list.add(dis.readUTF()));
                         resume.addSection(sectionType, new ListSection(list));
                     }
                     case EXPERIENCE, EDUCATION -> {
                         List<Organization> organizationList = new ArrayList<>();
-                        int sizeOrg = dataInputStream.readInt();
-                        for (int j = 0; j < sizeOrg; j++) {
+                        readWithException(dis, () -> {
                             Organization organization = new Organization();
-                            organization.setTitle(dataInputStream.readUTF());
-                            organization.setWebsite(dataInputStream.readUTF());
+                            organization.setTitle(dis.readUTF());
+                            organization.setWebsite(dis.readUTF());
                             List<Organization.Period> periods = new ArrayList<>();
-                            int sizePer = dataInputStream.readInt();
-                            for (int k = 0; k < sizePer; k++) {
-                                LocalDate start = localDateRead(dataInputStream);
-                                LocalDate end = localDateRead(dataInputStream);
-                                String title = dataInputStream.readUTF();
-                                String description = dataInputStream.readUTF();
+                            readWithException(dis, () -> {
+                                LocalDate start = localDateRead(dis);
+                                LocalDate end = localDateRead(dis);
+                                String title = dis.readUTF();
+                                String description = dis.readUTF();
                                 periods.add(new Organization.Period(start, end, title, description));
                                 organization.setPeriods(periods);
-                            }
-                            organizationList.add(organization);
-                        }
+                                return organization;
+                            });
+                            return organizationList.add(organization);
+                        });
                         resume.addSection(sectionType, new OrganizationSection(organizationList));
                     }
                 }
@@ -98,19 +92,27 @@ public class DataStreamSerializer implements StreamSerializer {
         }
     }
 
-    private void localDateWrite(DataOutputStream dataOutputStream, LocalDate localDate) throws IOException {
-        dataOutputStream.writeInt(localDate.getYear());
-        dataOutputStream.writeUTF(localDate.getMonth().name());
+    private void localDateWrite(DataOutputStream dos, LocalDate localDate) throws IOException {
+        dos.writeInt(localDate.getYear());
+        dos.writeUTF(localDate.getMonth().name());
     }
 
-    private LocalDate localDateRead(DataInputStream dataInputStream) throws IOException {
-        return DateUtil.of(dataInputStream.readInt(), Month.valueOf(dataInputStream.readUTF()));
+    private LocalDate localDateRead(DataInputStream dis) throws IOException {
+        return DateUtil.of(dis.readInt(), Month.valueOf(dis.readUTF()));
     }
 
-    private <T> void writeWithException(Collection<T> collection, DataOutputStream dataOutputStream,
+    private <T> void writeWithException(Collection<T> collection, DataOutputStream dos,
                                         WriteElement<T> writeElement) throws IOException {
-        dataOutputStream.writeInt(collection.size());
+        dos.writeInt(collection.size());
         for (T elem : collection) writeElement.write(elem);
+    }
+
+    private <T> void readWithException(DataInputStream dis, ReadElement<T> readElement) throws IOException {
+        List<T> list = new ArrayList<>();
+        int size = dis.readInt();
+        for (int i = 0; i < size; i++) {
+            list.add(readElement.read());
+        }
     }
 }
 
