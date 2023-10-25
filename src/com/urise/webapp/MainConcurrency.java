@@ -1,8 +1,13 @@
 package com.urise.webapp;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MainConcurrency {
     private static int counter;
-    public static void main(String[] args) throws InterruptedException {
+    private static final int THREADS_NUMBER = 10000;
+
+    public static void main(String[] args) {
         System.out.println(Thread.currentThread().getName());
         Thread thread0 = new Thread() {
             @Override
@@ -17,17 +22,32 @@ public class MainConcurrency {
 
         System.out.println(thread0.getState());
 
-        for(int i =0; i < 10000; i++) {
-            new Thread(() -> {
-                for(int j = 0; j < 100; j++) {
-                    inc();
+        final MainConcurrency mainConcurrency = new MainConcurrency();
+        List<Thread> threadList = new ArrayList<>(THREADS_NUMBER);
+        for (int i = 0; i < THREADS_NUMBER; i++) {
+            Thread thread = new Thread(() -> {
+                for (int j = 0; j < 100; j++) {
+                    mainConcurrency.inc();
                 }
-            }).start();
+            });
+            thread.start();
+            threadList.add(thread);
         }
-        Thread.sleep(500);
+
+
+        threadList.forEach(t -> {
+            try {
+                t.join();
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        });
         System.out.println(counter);
+
+        new MainConcurrency().inc();
     }
-    private static synchronized void inc() {
+
+    private synchronized void inc() {
         counter++;
     }
 }
