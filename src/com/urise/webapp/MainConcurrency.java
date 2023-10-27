@@ -13,9 +13,24 @@ public class MainConcurrency {
             @Override
             public void run() {
                 System.out.println(getName() + ", " + getState());
+//                throw new IllegalStateException();
             }
         };
         thread0.start();
+
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                System.out.println(Thread.currentThread().getName()
+                        + ", " + Thread.currentThread().getState());
+            }
+
+            private void inc() {
+                synchronized (this) {
+//                    counter++;
+                }
+            }
+        }).start();
 
         new Thread(() -> System.out.println(Thread.currentThread().getName()
                 + ", " + Thread.currentThread().getState())).start();
@@ -42,7 +57,7 @@ public class MainConcurrency {
                 throw new RuntimeException(e);
             }
         });
-        System.out.println(counter);
+        System.out.println(mainConcurrency.counter);
 
         new MainConcurrency().inc();
     }
