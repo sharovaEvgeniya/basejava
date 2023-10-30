@@ -5,40 +5,20 @@ public class DeadLock {
     public static final Object lockSecond = new Object();
 
     public static void main(String[] args) {
-        ThreadFirst threadFirst = new ThreadFirst();
-        ThreadSecond threadSecond = new ThreadSecond();
-        threadFirst.start();
-        threadSecond.start();
+        new Thread(() -> deadLockRun(lockFirst, lockSecond)).start();
+        new Thread(() -> deadLockRun(lockSecond,lockFirst)).start();
     }
 
-    private static class ThreadFirst extends Thread {
-        @Override
-        public void run() {
-            synchronized (lockFirst) {
-                System.out.println("Поток 1: Удерживает блокировку 1");
-                try {
-                    Thread.sleep(10);
-                } catch (InterruptedException ignored) {
-                }
-                System.out.println("Поток 2: Ожидает блокировку 2");
-                synchronized (lockSecond) {
-                    System.out.println("Поток 1: Удерживает блокировку 1 и 2");
-                }
+    private static void deadLockRun(Object first, Object second) {
+        synchronized (first) {
+            System.out.println("Поток удерживает блокировку 1");
+            try {
+                Thread.sleep(10);
+            } catch (InterruptedException ignored) {
             }
-        }
-    }
-    private static class ThreadSecond extends Thread {
-        @Override
-        public void run() {
-            synchronized (lockSecond) {
-                System.out.println("Поток 2: Удерживает блокировку 1");
-                try{
-                    Thread.sleep(10);
-                } catch (InterruptedException ignored) {}
-                System.out.println("Поток 2: Ожидает блокровку 2");
-                synchronized (lockFirst) {
-                    System.out.println("Поток 2: Удерживает блокировку 1 и 2");
-                }
+            System.out.println("Поток ожидает блокировку 2");
+            synchronized (second) {
+                System.out.println("Поток удерживает блокировку 1 и 2");
             }
         }
     }
