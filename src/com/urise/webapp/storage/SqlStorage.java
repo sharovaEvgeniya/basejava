@@ -72,7 +72,7 @@ public class SqlStorage implements Storage {
 
     @Override
     public void delete(String uuid) {
-        try ( Connection connection = connectionFactory.getConnection();
+        try (Connection connection = connectionFactory.getConnection();
              PreparedStatement ps = connection.prepareStatement("DELETE FROM resume WHERE uuid =?")) {
             ps.setString(1, uuid);
             if (ps.executeUpdate() == 0) throw new NotExistStorageException(uuid);
