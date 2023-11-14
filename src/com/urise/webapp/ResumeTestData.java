@@ -45,7 +45,7 @@ public class ResumeTestData {
 //        sections.put(EDUCATION, new OrganizationSection(organizations));
 //
 //        return new Resume(uuid, fullName, contacts, sections);
-        return new Resume(uuid,fullName);
+        return new Resume(uuid, fullName);
     }
 
     public static void main(String[] args) {
