@@ -19,11 +19,19 @@ public class SqlHelper {
              PreparedStatement ps = connection.prepareStatement(sqlRequest)) {
             return sqlConnection.execute(ps);
         } catch (SQLException e) {
-            if (e.getSQLState().equals("23505")) {
-                throw new ExistStorageException(null);
-            }
             throw new StorageException(e);
         }
     }
 
+    public static <T> T connectWithException(String uuid, String sqlRequest, SqlConnection<T> sqlConnection) {
+        try (Connection connection = SqlStorage.connectionFactory.getConnection();
+             PreparedStatement ps = connection.prepareStatement(sqlRequest)) {
+            return sqlConnection.execute(ps);
+        } catch (SQLException e) {
+            if (e.getSQLState().equals("23505")) {
+                throw new ExistStorageException(uuid);
+            }
+            throw new StorageException(e);
+        }
+    }
 }

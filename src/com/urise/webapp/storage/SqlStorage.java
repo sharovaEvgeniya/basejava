@@ -39,7 +39,7 @@ public class SqlStorage implements Storage {
     @Override
     public void save(Resume resume) {
         sqlRequest = "INSERT INTO resume(uuid, full_name) VALUES (?,?)";
-        SqlHelper.connectWithException(sqlRequest, ps -> {
+        SqlHelper.connectWithException(resume.getUuid(),sqlRequest, ps -> {
             ps.setString(1, resume.getUuid());
             ps.setString(2, resume.getFullName());
             ps.execute();
