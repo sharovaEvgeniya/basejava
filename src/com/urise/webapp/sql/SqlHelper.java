@@ -2,20 +2,24 @@ package com.urise.webapp.sql;
 
 import com.urise.webapp.exception.ExistStorageException;
 import com.urise.webapp.exception.StorageException;
-import com.urise.webapp.storage.SqlStorage;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class SqlHelper {
+    private final ConnectionFactory connectionFactory;
 
-    public static void connectWithException(String sqlRequest) {
+    public SqlHelper(ConnectionFactory connectionFactory) {
+        this.connectionFactory = connectionFactory;
+    }
+
+    public void connectWithException(String sqlRequest) {
         connectWithException(sqlRequest, ps -> ps.execute());
     }
 
-    public static <T> T connectWithException(String sqlRequest, SqlConnection<T> sqlConnection) {
-        try (Connection connection = SqlStorage.connectionFactory.getConnection();
+    public <T> T connectWithException(String sqlRequest, SqlConnection<T> sqlConnection) {
+        try (Connection connection = connectionFactory.getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlRequest)) {
             return sqlConnection.execute(ps);
         } catch (SQLException e) {
@@ -23,10 +27,10 @@ public class SqlHelper {
         }
     }
 
-    public static <T> T connectWithException(String uuid, String sqlRequest, SqlConnection<T> sqlConnection) {
-        try (Connection connection = SqlStorage.connectionFactory.getConnection();
+    public <T> void connectWithException(String uuid, String sqlRequest, SqlConnection<T> sqlConnection) {
+        try (Connection connection = connectionFactory.getConnection();
              PreparedStatement ps = connection.prepareStatement(sqlRequest)) {
-            return sqlConnection.execute(ps);
+            sqlConnection.execute(ps);
         } catch (SQLException e) {
             if (e.getSQLState().equals("23505")) {
                 throw new ExistStorageException(uuid);
