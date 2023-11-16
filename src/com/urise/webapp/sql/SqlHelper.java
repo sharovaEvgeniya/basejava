@@ -15,7 +15,7 @@ public class SqlHelper {
     }
 
     public void connectWithException(String sqlRequest) {
-        connectWithException(sqlRequest, ps -> ps.execute());
+        connectWithException(sqlRequest, PreparedStatement::execute);
     }
 
     public <T> T connectWithException(String sqlRequest, SqlConnection<T> sqlConnection) {
