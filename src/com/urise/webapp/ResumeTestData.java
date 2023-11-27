@@ -2,20 +2,23 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
+import static com.urise.webapp.model.ContactType.*;
+
 public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
-//        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
-//        contacts.put(NUMBER, "+7(999) 000-00-00");
-//        contacts.put(SKYPE, "skype");
-//        contacts.put(EMAIL, "email");
-//        contacts.put(LINKEDIN, "linkedIn");
-//        contacts.put(GITHUB, "gitHub");
-//        contacts.put(STACKOVERFLOW, "stackOverflow");
-//        contacts.put(HOMEPAGE, "homePage");
-//
+        Map<ContactType, String> contacts = new EnumMap<>(ContactType.class);
+        contacts.put(NUMBER, "+7(999) 000-00-00");
+        contacts.put(SKYPE, "skype");
+        contacts.put(EMAIL, "email");
+        contacts.put(LINKEDIN, "linkedIn");
+        contacts.put(GITHUB, "gitHub");
+        contacts.put(STACKOVERFLOW, "stackOverflow");
+        contacts.put(HOMEPAGE, "homePage");
+
 //        List<String> achievementOrQualification = new ArrayList<>();
 //        achievementOrQualification.add("achievement or qualification");
 //
@@ -45,7 +48,7 @@ public class ResumeTestData {
 //        sections.put(EDUCATION, new OrganizationSection(organizations));
 //
 //        return new Resume(uuid, fullName, contacts, sections);
-        return new Resume(uuid, fullName);
+        return new Resume(uuid, fullName, contacts);
     }
 
     public static void main(String[] args) {
