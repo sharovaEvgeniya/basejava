@@ -28,10 +28,22 @@ public class SqlStorage implements Storage {
 
     @Override
     public void update(Resume resume) {
-        sqlHelper.connectWithException("UPDATE resume SET full_name = ? WHERE uuid = ?", ps -> {
-            ps.setString(1, resume.getFullName());
-            ps.setString(2, resume.getUuid());
-            if (ps.executeUpdate() == 0) throw new NotExistStorageException(resume.getUuid());
+        sqlHelper.transactionalExecute(connection -> {
+            try (PreparedStatement ps =
+                         connection.prepareStatement("UPDATE resume SET full_name = ? WHERE uuid = ?")) {
+                ps.setString(1, resume.getFullName());
+                ps.setString(2, resume.getUuid());
+                if (ps.executeUpdate() == 0) throw new NotExistStorageException(resume.getUuid());
+            }
+            try (PreparedStatement ps =
+                         connection.prepareStatement("DELETE FROM contact WHERE resume_uuid=?")) {
+                ps.setString(1, resume.getUuid());
+                ps.execute();
+            }
+            try (PreparedStatement ps =
+                         connection.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES  (?,?,?)")) {
+                insertContacts(resume, ps);
+            }
             return null;
         });
     }
@@ -47,13 +59,7 @@ public class SqlStorage implements Storage {
             }
             try (PreparedStatement ps =
                          connection.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES  (?,?,?)")) {
-                for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-                    ps.setString(1, resume.getUuid());
-                    ps.setString(2, e.getKey().name());
-                    ps.setString(3, e.getValue());
-                    ps.addBatch();
-                }
-                ps.executeBatch();
+                insertContacts(resume, ps);
             }
             return null;
         });
@@ -122,9 +128,21 @@ public class SqlStorage implements Storage {
         });
     }
 
+    private void insertContacts(Resume resume, PreparedStatement ps) throws SQLException {
+        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+            ps.setString(1, resume.getUuid());
+            ps.setString(2, e.getKey().name());
+            ps.setString(3, e.getValue());
+            ps.addBatch();
+        }
+        ps.executeBatch();
+    }
+
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
         String value = rs.getString("value");
-        ContactType type = ContactType.valueOf(rs.getString("type"));
-        resume.addContact(type, value);
+        if (value != null) {
+            ContactType type = ContactType.valueOf(rs.getString("type"));
+            resume.addContact(type, value);
+        }
     }
 }
