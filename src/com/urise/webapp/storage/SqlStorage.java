@@ -5,10 +5,7 @@ import com.urise.webapp.model.ContactType;
 import com.urise.webapp.model.Resume;
 import com.urise.webapp.sql.SqlHelper;
 
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -40,10 +37,7 @@ public class SqlStorage implements Storage {
                 ps.setString(1, resume.getUuid());
                 ps.execute();
             }
-            try (PreparedStatement ps =
-                         connection.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES  (?,?,?)")) {
-                insertContacts(resume, ps);
-            }
+            insertContacts(resume, connection);
             return null;
         });
     }
@@ -57,10 +51,7 @@ public class SqlStorage implements Storage {
                 ps.setString(2, resume.getFullName());
                 ps.execute();
             }
-            try (PreparedStatement ps =
-                         connection.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES  (?,?,?)")) {
-                insertContacts(resume, ps);
-            }
+            insertContacts(resume, connection);
             return null;
         });
     }
@@ -107,13 +98,14 @@ public class SqlStorage implements Storage {
                     ResultSet rs = ps.executeQuery();
                     while (rs.next()) {
                         String uuid = rs.getString("uuid");
+                        Resume resume;
                         if (resumes.containsKey(uuid)) {
-                            addContact(rs, resumes.get(uuid));
+                            resume = resumes.get(uuid);
                         } else {
-                            Resume resume = new Resume(uuid, rs.getString("full_name"));
+                            resume = new Resume(uuid, rs.getString("full_name"));
                             resumes.put(uuid, resume);
-                            addContact(rs, resume);
                         }
+                        addContact(rs, resume);
                     }
                     return new ArrayList<>(resumes.values());
                 });
@@ -128,14 +120,16 @@ public class SqlStorage implements Storage {
         });
     }
 
-    private void insertContacts(Resume resume, PreparedStatement ps) throws SQLException {
-        for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
-            ps.setString(1, resume.getUuid());
-            ps.setString(2, e.getKey().name());
-            ps.setString(3, e.getValue());
-            ps.addBatch();
+    private void insertContacts(Resume resume, Connection connection) throws SQLException {
+        try (PreparedStatement ps = connection.prepareStatement("INSERT INTO contact (resume_uuid, type, value) VALUES  (?,?,?)")) {
+            for (Map.Entry<ContactType, String> e : resume.getContacts().entrySet()) {
+                ps.setString(1, resume.getUuid());
+                ps.setString(2, e.getKey().name());
+                ps.setString(3, e.getValue());
+                ps.addBatch();
+            }
+            ps.executeBatch();
         }
-        ps.executeBatch();
     }
 
     private void addContact(ResultSet rs, Resume resume) throws SQLException {
