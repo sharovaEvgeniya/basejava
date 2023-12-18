@@ -72,7 +72,7 @@ public class SqlStorage implements Storage {
                     Resume resume = new Resume(uuid, rs.getString("full_name"));
                     do {
                         addContact(rs, resume);
-                    } while (rs.next());
+                     } while (rs.next());
                     return resume;
                 });
     }
