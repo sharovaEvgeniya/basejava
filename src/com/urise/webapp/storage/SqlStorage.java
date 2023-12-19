@@ -127,7 +127,6 @@ public class SqlStorage implements Storage {
                 ps.setString(2, e.getKey().name());
                 ps.setString(3, e.getValue());
                 ps.addBatch();
-
             }
             ps.executeBatch();
         }
