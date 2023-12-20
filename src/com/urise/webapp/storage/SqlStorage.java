@@ -183,7 +183,7 @@ public class SqlStorage implements Storage {
                     String str = "";
                     List<String> strings = ((ListSection) e.getValue()).getStrings();
                     for (String string : strings) {
-                        str += string + " \n";
+                        str += string + "\n";
                     }
                     ps.setString(3, str);
                 }
