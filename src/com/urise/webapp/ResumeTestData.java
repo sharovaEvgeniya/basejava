@@ -2,11 +2,13 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 
 import static com.urise.webapp.model.ContactType.*;
+import static com.urise.webapp.model.SectionType.*;
 
 public class ResumeTestData {
     public static Resume createResume(String uuid, String fullName) {
@@ -19,8 +21,9 @@ public class ResumeTestData {
         contacts.put(STACKOVERFLOW, "stackOverflow");
         contacts.put(HOMEPAGE, "homePage");
 
-//        List<String> achievementOrQualification = new ArrayList<>();
-//        achievementOrQualification.add("achievement or qualification");
+        List<String> achievementOrQualification = new ArrayList<>();
+        achievementOrQualification.add("achievement or qualification");
+        achievementOrQualification.add("lorem lorem lorem");
 //
 //        LocalDate start1 = LocalDate.of(9999, Month.SEPTEMBER, 1);
 //        LocalDate end1 = LocalDate.of(9999, Month.JANUARY, 1);
@@ -39,16 +42,16 @@ public class ResumeTestData {
 //        List<Organization> organizations = new ArrayList<>();
 //        organizations.add(organization);
 //
-//        Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
-//        sections.put(OBJECTIVE, new TextSection("objective"));
-//        sections.put(PERSONAL, new TextSection("personal"));
-//        sections.put(ACHIEVEMENT, new ListSection(achievementOrQualification));
-//        sections.put(QUALIFICATION, new ListSection(achievementOrQualification));
+        Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
+        sections.put(OBJECTIVE, new TextSection("objective"));
+        sections.put(PERSONAL, new TextSection("personal"));
+        sections.put(ACHIEVEMENT, new ListSection(achievementOrQualification));
+        sections.put(QUALIFICATION, new ListSection(achievementOrQualification));
 //        sections.put(EXPERIENCE, new OrganizationSection(organizations));
 //        sections.put(EDUCATION, new OrganizationSection(organizations));
 //
 //        return new Resume(uuid, fullName, contacts, sections);
-        return new Resume(uuid, fullName, contacts);
+        return new Resume(uuid, fullName, contacts,sections);
     }
 
     public static void main(String[] args) {
