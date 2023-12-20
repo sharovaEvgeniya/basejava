@@ -10,10 +10,7 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 import static com.urise.webapp.ResumeTestData.createResume;
 
