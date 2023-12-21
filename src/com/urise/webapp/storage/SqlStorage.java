@@ -180,11 +180,8 @@ public class SqlStorage implements Storage {
                     ps.setString(3, textSection.getContent());
                 }
                 if (sectionType.equals("ListSection")) {
-                    String str = "";
                     List<String> strings = ((ListSection) e.getValue()).getStrings();
-                    for (String string : strings) {
-                        str += string + "\n";
-                    }
+                    String str = String.join("\n", strings);
                     ps.setString(3, str);
                 }
                 ps.addBatch();
@@ -210,7 +207,7 @@ public class SqlStorage implements Storage {
                 case OBJECTIVE, PERSONAL -> resume.addSection(type, new TextSection(rs.getString("value")));
                 case ACHIEVEMENT, QUALIFICATION -> {
                     String str = rs.getString("value");
-                    String[] s = str.split("\\n");
+                    String[] s = str.split("\n");
                     Collections.addAll(strings, s);
                     resume.addSection(type, new ListSection(strings));
                 }

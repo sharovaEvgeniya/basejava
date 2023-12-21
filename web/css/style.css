@@ -12,3 +12,7 @@ footer {
     padding: 5px 20px;
     margin: 20px 0;
 }
+
+table, th, td {
+    border:2px solid #2E6E9E;
+}
