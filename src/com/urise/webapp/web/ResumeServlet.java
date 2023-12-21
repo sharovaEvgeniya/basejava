@@ -37,21 +37,21 @@ public class ResumeServlet extends HttpServlet {
                 "        border:2px solid #2E6E9E;\n" +
                 "    }\n" +
                 "</style>");
+        printWriter.write("<table>\n" +
+                "    <tr>\n" +
+                "        <th>№</th>    \n" +
+                "        <th>Uuid</th>\n" +
+                "        <th>Full Name</th>\n" +
+                "    </tr>\n" +
+                "\n");
         for (Resume resume : resumeList) {
-            printWriter.write("<table>\n" +
-                    "    <tr>\n" +
-                    "        <th>№</th>    \n" +
-                    "        <th>Uuid</th>\n" +
-                    "        <th>Full Name</th>\n" +
-                    "    </tr>\n" +
-                    "\n" +
-                    "    <tr>\n" +
+            printWriter.write("    <tr>\n" +
                     "        <td>" + count++ + "</td>\n" +
                     "        <td>" + resume.getUuid() + "</td>\n" +
                     "        <td>" + resume.getFullName() + "</td>\n" +
-                    "    </tr>\n" +
-                    "</table>");
+                    "    </tr>\n");
         }
+        printWriter.write("</table>");
     }
 
     @Override
