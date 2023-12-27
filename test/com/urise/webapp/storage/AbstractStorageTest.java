@@ -10,30 +10,16 @@ import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 import static com.urise.webapp.ResumeTestData.createResume;
+import static com.urise.webapp.TestData.*;
 
 public abstract class AbstractStorageTest {
     protected final Storage storage;
     protected static final File STORAGE_DIR = Config.get().getStorageDir();
-    private static final String UUID_1 = UUID.randomUUID().toString();
-    private static final String UUID_2 = UUID.randomUUID().toString();
-    private static final String UUID_3 = UUID.randomUUID().toString();
-    private static final String UUID_4 = UUID.randomUUID().toString();
-    private static final String UUID_NOT_EXIST = "dummy";
-
-    private static final String FULL_NAME_1 = "fullName1";
-    private static final String FULL_NAME_2 = "fullName2";
-    private static final String FULL_NAME_3 = "fullName3";
-    private static final String FULL_NAME_4 = "fullName4";
-    private static final String FULL_NAME_NOT_EXIST = "fullName_dummy";
-
-    private static final Resume RESUME_1 = createResume(UUID_1, FULL_NAME_1);
-    private static final Resume RESUME_2 = createResume(UUID_2, FULL_NAME_2);
-    private static final Resume RESUME_3 = createResume(UUID_3, FULL_NAME_3);
-    private static final Resume RESUME_4 = createResume(UUID_4, FULL_NAME_4);
-    private static final Resume RESUME_NOT_EXIST = createResume(UUID_NOT_EXIST, FULL_NAME_NOT_EXIST);
 
     public AbstractStorageTest(Storage storage) {
         this.storage = storage;
