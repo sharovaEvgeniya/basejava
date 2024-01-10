@@ -8,15 +8,21 @@
     <title>Список всех резюме</title>
 </head>
 <body>
-<jsp:include page="fragments/header.jsp"/>
+<div class="header">
+    <h2 class="resume-control-h2">Resume management</h2>
+</div>
 <section>
-    <table>
+    <table class="table">
+        <thead>
         <tr>
             <th>Имя</th>
             <th>Email</th>
             <th></th>
             <th></th>
         </tr>
+        </thead>
+
+        <tbody>
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
             <tr>
@@ -35,8 +41,8 @@
                 </td>
             </tr>
         </c:forEach>
+        </tbody>
     </table>
 </section>
-<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>
