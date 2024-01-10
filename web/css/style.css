@@ -1,21 +1,56 @@
 header {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
+    background: none repeat scroll 0 0 #A6DBF4;
+    color: #025075;
     font-size: 20px;
     padding: 5px 20px;
     margin: 20px 0;
 }
 
 footer {
-    background: none repeat scroll 0 0 #A6C9E2;
-    color: #2E6E9E;
+
+    background: none repeat scroll 0 0 #A6DBF4;
+    color: #025075;
     font-size: 20px;
     padding: 5px 20px;
     margin: 20px 0;
 }
 
-table, tr, th {
+table {
     padding: 6px;
-    border: 2px solid #2E6E9E;
+    border: 5px solid #0C95D7;
 }
 
+tr, th, td {
+    padding: 10px;
+    border: 3px solid #0C95D7;
+}
+
+dl {
+    background: none repeat scroll 0 0 #FAFAFA;
+    margin: 8px 0;
+    padding: 0;
+}
+
+dt {
+    display: inline-block;
+    width: 170px;
+}
+
+dd {
+    display: inline-block;
+    margin-left: 8px;
+    vertical-align: top;
+}
+
+a {
+    color: #025075;
+    text-decoration: underline double #025075;
+}
+
+a:active {
+    color: #025075;
+}
+
+a:visited {
+    color: #025075;
+}

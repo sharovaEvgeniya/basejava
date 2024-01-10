@@ -1,5 +1,5 @@
 <%@ page import="com.urise.webapp.model.ContactType" %>
-<%@ page contentType="text/html;charset=UTF-8"%>
+<%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
@@ -14,15 +14,25 @@
         <tr>
             <th>Имя</th>
             <th>Email</th>
+            <th></th>
+            <th></th>
         </tr>
         <c:forEach items="${resumes}" var="resume">
             <jsp:useBean id="resume" type="com.urise.webapp.model.Resume"/>
             <tr>
-                <th><a href="resume?uuid=${resume.uuid}">${resume.fullName}
-                </a>
-                </th>
-                <th>${resume.getContact(ContactType.EMAIL)}
-                </th>
+                <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
+                <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%>
+                </td>
+                <td>
+                    <a href="resume?uuid=${resume.uuid}&action=delete">
+                        <img src="img/delete-file.png" width="25" height="25">
+                    </a>
+                </td>
+                <td>
+                    <a href="resume?uuid=${resume.uuid}&action=edit">
+                        <img src="img/pen.png" width="25" height="25">
+                    </a>
+                </td>
             </tr>
         </c:forEach>
     </table>
