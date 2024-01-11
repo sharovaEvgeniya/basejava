@@ -8,17 +8,28 @@
     <title>Список всех резюме</title>
 </head>
 <body>
-<div class="header">
-    <h2 class="resume-control-h2">Resume management</h2>
+<div class="resumes-title">
+    <img src="img/resumes-title.png" height="50" width="50" style="vertical-align:middle">
+    <a href="resume">
+        <a>Resume management</a>
+    </a>
 </div>
-<section>
+<div class="add-resume">
+    <a href="resume" style="text-decoration: none" >
+        <img src="img/add-resume.png" width="30" height="30" style="vertical-align:sub">
+    </a>
+    <a href="resume">
+        <a>Add resume</a>
+    </a>
+</div>
+<div class="tables">
     <table class="table">
         <thead>
         <tr>
-            <th>Имя</th>
+            <th>Name</th>
             <th>Email</th>
-            <th></th>
-            <th></th>
+            <th>Edit</th>
+            <th>Delete</th>
         </tr>
         </thead>
 
@@ -29,20 +40,21 @@
                 <td><a href="resume?uuid=${resume.uuid}&action=view">${resume.fullName}</a></td>
                 <td><%=ContactType.EMAIL.toHtml(resume.getContact(ContactType.EMAIL))%>
                 </td>
-                <td>
-                    <a href="resume?uuid=${resume.uuid}&action=delete">
-                        <img src="img/delete-file.png" width="25" height="25">
-                    </a>
-                </td>
+
                 <td>
                     <a href="resume?uuid=${resume.uuid}&action=edit">
                         <img src="img/pen.png" width="25" height="25">
+                    </a>
+                </td>
+                <td>
+                    <a href="resume?uuid=${resume.uuid}&action=delete">
+                        <img src="img/delete.png" width="25" height="25">
                     </a>
                 </td>
             </tr>
         </c:forEach>
         </tbody>
     </table>
-</section>
+</div>
 </body>
 </html>
