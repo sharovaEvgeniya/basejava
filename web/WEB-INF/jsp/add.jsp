@@ -6,9 +6,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
     <link rel="stylesheet" href="css/style.css">
-    <link rel="stylesheet" href="css/formStyle.css">
-    <jsp:useBean id="resume" type="com.urise.webapp.model.Resume" scope="request"/>
-    <title>Resume ${resume.fullName}</title>
+    <title>Новое резюме</title>
 </head>
 <body>
 <jsp:include page="fragments/header.jsp"/>
@@ -44,6 +42,5 @@
         </div>
     </form>
 </section>
-<jsp:include page="fragments/footer.jsp"/>
 </body>
 </html>

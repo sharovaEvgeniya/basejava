@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -38,6 +39,10 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
+            case "add" -> {
+                request.getRequestDispatcher("/WEB-INF/jsp/add.jsp").forward(request,response);
+                return;
+            }
             case "view", "edit" -> r = storage.get(uuid);
             default -> throw new IllegalArgumentException("Action " + action + "  is illegal");
         }
@@ -51,7 +56,12 @@ public class ResumeServlet extends HttpServlet {
         request.setCharacterEncoding("UTF-8");
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
-        Resume resume = storage.get(uuid);
+        Resume resume;
+        if(uuid == null) {
+            resume = new Resume(UUID.randomUUID().toString(), fullName);
+            storage.save(resume);
+        }
+        resume = storage.get(uuid);
         resume.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
@@ -66,7 +76,7 @@ public class ResumeServlet extends HttpServlet {
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case PERSONAL, OBJECTIVE -> resume.addSection(type, new TextSection(value));
-                    case ACHIEVEMENT,QUALIFICATION -> {
+                    case ACHIEVEMENT, QUALIFICATION -> {
                         List<String> stringList = Arrays.stream(value.split("\\.")).toList();
                         resume.addSection(type, new ListSection(stringList));
                     }

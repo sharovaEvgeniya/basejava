@@ -13,8 +13,8 @@
     <a href="resume" style="text-decoration: none">
         <img src="img/add-resume.png" width="30" height="30" style="vertical-align:sub">
     </a>
-    <a href="resume">
-        <a>Add resume</a>
+    <a href="resume?action=add">
+        Add resume
     </a>
 </div>
 <div class="tables">
