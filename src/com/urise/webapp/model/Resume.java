@@ -5,10 +5,7 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Initial resume class
@@ -85,6 +82,32 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public Section getSection(SectionType type) {
         return sections.get(type);
+    }
+
+    public String toHtml(SectionType type) {
+        String str = "";
+        if (type != null) {
+            switch (type) {
+                case OBJECTIVE, PERSONAL -> {
+                    TextSection textSection = (TextSection) sections.get(type);
+                    if (textSection == null) {
+                        return "";
+                    }
+                    str = textSection.getContent();
+                }
+                case ACHIEVEMENT, QUALIFICATION -> {
+                    ListSection listSection = (ListSection) sections.get(type);
+                    if (listSection == null) {
+                        return "";
+                    }
+                    List<String> stringList = listSection.getStrings();
+                    for (String string : stringList) {
+                        str += string + ".";
+                    }
+                }
+            }
+        }
+        return str;
     }
 
     public void addSection(SectionType type, Section section) {

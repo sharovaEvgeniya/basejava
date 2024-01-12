@@ -1,7 +1,6 @@
 package com.urise.webapp.web;
 
-import com.urise.webapp.model.ContactType;
-import com.urise.webapp.model.Resume;
+import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
 
 import javax.servlet.ServletConfig;
@@ -10,6 +9,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -58,6 +59,20 @@ public class ResumeServlet extends HttpServlet {
                 resume.addContact(type, value);
             } else {
                 resume.getContacts().remove(type);
+            }
+        }
+        for (SectionType type : SectionType.values()) {
+            String value = request.getParameter(type.name());
+            if (value != null && value.trim().length() != 0) {
+                switch (type) {
+                    case PERSONAL, OBJECTIVE -> resume.addSection(type, new TextSection(value));
+                    case ACHIEVEMENT,QUALIFICATION -> {
+                        List<String> stringList = Arrays.stream(value.split("\\.")).toList();
+                        resume.addSection(type, new ListSection(stringList));
+                    }
+                }
+            } else {
+                resume.getSections().remove(type);
             }
         }
         storage.update(resume);

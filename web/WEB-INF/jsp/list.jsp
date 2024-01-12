@@ -8,14 +8,9 @@
     <title>Список всех резюме</title>
 </head>
 <body>
-<div class="resumes-title">
-    <img src="img/resumes-title.png" height="50" width="50" style="vertical-align:middle">
-    <a href="resume">
-        <a>Resume management</a>
-    </a>
-</div>
+<jsp:include page="fragments/header.jsp"/>
 <div class="add-resume">
-    <a href="resume" style="text-decoration: none" >
+    <a href="resume" style="text-decoration: none">
         <img src="img/add-resume.png" width="30" height="30" style="vertical-align:sub">
     </a>
     <a href="resume">

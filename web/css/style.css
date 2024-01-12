@@ -7,6 +7,7 @@ hr {
     border-top: 1px solid #333;
     box-shadow: 0 10px 10px -10px #8c8b8b inset;
 }
+
 .resumes-title {
     font-size: 30px;
     line-height: 100px;
@@ -22,6 +23,7 @@ hr {
     text-align: right;
     color: #4A586E;
 }
+
 .full-name {
     margin-left: 15%;
     margin-top: 15px;
@@ -29,7 +31,28 @@ hr {
     text-align: left;
     font-size: 25px;
 }
+
 .contacts {
+    margin-left: 15%;
+    margin-top: 15px;
+    color: #4A586E;
+    text-align: left;
+    font-size: 15px;
+}
+
+.sections {
+    margin-top: 20px;
+}
+
+.section-title {
+    margin-left: 15%;
+    margin-top: 15px;
+    color: #4A586E;
+    text-align: left;
+    font-size: 25px;
+}
+
+.section-value {
     margin-left: 15%;
     margin-top: 15px;
     color: #4A586E;

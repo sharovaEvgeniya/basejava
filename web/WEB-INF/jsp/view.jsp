@@ -8,12 +8,7 @@
     <title>Резюме ${resume.fullName}</title>
 </head>
 <body>
-<div class="resumes-title">
-    <img src="img/resumes-title.png" height="50" width="50" style="vertical-align:middle">
-    <a href="resume">
-        <a>Resume management</a>
-    </a>
-</div>
+<jsp:include page="fragments/header.jsp"/>
 <div class="form">
     <div class="full-name">
         ${resume.fullName}&nbsp;
@@ -30,11 +25,11 @@
         </c:forEach>
     </div>
     <hr>
-    <div class="section-text">
+    <div class="sections">
         <c:forEach var="sectionEntry" items="${resume.sections}">
-        <jsp:useBean id="sectionEntry"
-                     type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.TextSection>"/>
-            <%=sectionEntry.getKey().name()%><br/>
+            <jsp:useBean id="sectionEntry"
+                         type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
+            <%=sectionEntry.getKey().toHtml(sectionEntry.getKey(), sectionEntry.getValue())%><br>
         </c:forEach>
     </div>
 </div>
