@@ -16,7 +16,8 @@
         <div class="form-inner">
             <h3>Full name:</h3>
             <dl>
-                <dd><input type="text" name="fullName" placeholder="Фамилия Имя Отчество" size=35 required></dd>
+                <dd><input type="text" name="fullName" placeholder="Фамилия Имя Отчество" size=35 required
+                           pattern="^[^\s]+(\s.*)?$"></dd>
             </dl>
             <h3>Contacts:</h3>
             <p>
@@ -30,7 +31,7 @@
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <dl>
                     <dt>${type.title}</dt>
-                    <dd><textarea  name="${type.name()}" cols="100"></textarea></dd>
+                    <dd><textarea name="${type.name()}" cols="100"></textarea></dd>
                 </dl>
             </c:forEach>
 
