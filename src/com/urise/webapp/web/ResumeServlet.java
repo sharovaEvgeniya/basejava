@@ -40,7 +40,8 @@ public class ResumeServlet extends HttpServlet {
                 return;
             }
             case "add" -> {
-                request.getRequestDispatcher("/WEB-INF/jsp/add.jsp").forward(request,response);
+                request.getRequestDispatcher("/WEB-INF/jsp/add.jsp").forward(request, response);
+                response.sendRedirect("resume");
                 return;
             }
             case "view", "edit" -> r = storage.get(uuid);
@@ -57,16 +58,17 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume resume;
-        if(uuid == null) {
-            resume = new Resume(UUID.randomUUID().toString(), fullName);
+        if (uuid == null) {
+            resume = new Resume(UUID.randomUUID().toString(), fullName.trim());
             storage.save(resume);
+        } else {
+            resume = storage.get(uuid);
+            resume.setFullName(fullName.trim());
         }
-        resume = storage.get(uuid);
-        resume.setFullName(fullName);
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
-                resume.addContact(type, value);
+                resume.addContact(type, value.trim());
             } else {
                 resume.getContacts().remove(type);
             }
@@ -75,9 +77,9 @@ public class ResumeServlet extends HttpServlet {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
-                    case PERSONAL, OBJECTIVE -> resume.addSection(type, new TextSection(value));
+                    case PERSONAL, OBJECTIVE -> resume.addSection(type, new TextSection(value.trim()));
                     case ACHIEVEMENT, QUALIFICATION -> {
-                        List<String> stringList = Arrays.stream(value.split("\\.")).toList();
+                        List<String> stringList = Arrays.stream(value.trim().split("\\.")).toList();
                         resume.addSection(type, new ListSection(stringList));
                     }
                 }

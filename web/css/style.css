@@ -1,3 +1,7 @@
+#footer {
+    flex: 0 0 auto;
+}
+
 hr {
     margin-left: auto;
     width: 70%;
@@ -23,7 +27,9 @@ hr {
     text-align: right;
     color: #4A586E;
 }
-
+.form {
+    height: 100%;
+}
 .full-name {
     margin-left: 15%;
     margin-top: 15px;
@@ -62,6 +68,7 @@ hr {
 
 .tables {
     margin-top: 20px;
+    height: 100%;
 }
 
 .table {

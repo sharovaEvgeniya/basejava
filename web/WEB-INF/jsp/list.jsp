@@ -52,4 +52,5 @@
     </table>
 </div>
 </body>
+    <jsp:include page="fragments/footer.jsp"/>
 </html>

@@ -19,7 +19,7 @@
             <h3>Full name:</h3>
             <dl>
                 <dd><input type="text" name="fullName" placeholder="Фамилия Имя Отчество" size=35
-                           value="${resume.fullName}"></dd>
+                           value="${resume.fullName}" required></dd>
             </dl>
             <h3>Contacts:</h3>
             <p>
@@ -34,13 +34,13 @@
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <dl>
                     <dt>${type.title}</dt>
-                    <dd><input type="text" name="${type.name()}" size="100" value="${resume.toHtml(type)}"></dd>
+                    <dd><textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea></dd>
                 </dl>
             </c:forEach>
 
             </p>
             <button type="submit">Save</button>
-            <button class="delete" onclick="window.history.back()">Cancel</button>
+            <button class="delete" type="reset" onclick="window.history.back()">Cancel</button>
         </div>
     </form>
 </section>
