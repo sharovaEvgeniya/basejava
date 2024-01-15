@@ -16,8 +16,8 @@
         <div class="form-inner">
             <h3>Full name:</h3>
             <dl>
-                <dd><input type="text" name="fullName" placeholder="Фамилия Имя Отчество" size=35 required
-                           pattern="^[^\s]+(\s.*)?$"></dd>
+                <dd><input type="text" name="fullName" placeholder="Фамилия Имя Отчество"
+                           size=35 pattern="^[^\s]+(\s.*)?$" required></dd>
             </dl>
             <h3>Contacts:</h3>
             <p>
