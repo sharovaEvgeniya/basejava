@@ -50,6 +50,26 @@ public enum SectionType {
                     }
                     str += "</div>";
                 }
+                case EDUCATION, EXPERIENCE -> {
+                    List<Organization> orgList = ((OrganizationSection) section).getOrganization();
+                    for (Organization org : orgList) {
+                        str = "<div class='section-title'>" + type.title + ": <br>" +
+                                "<a class='link-website' href='" + org.website() + "'>" + org.title() + "</a>" +
+                                "<br>" +
+                                "</div>";
+                        List<Organization.Period> periods = org.periods();
+                        for (Organization.Period period : periods) {
+                            String startAndEnd = "<div class='section-period-time'>" + period.start() + " — " +
+                                    period.end() + "</div>";
+                            String titleAndDescription = "<div class='section-period-value'>" +
+                                    "<p class='period-title'>" + period.title() + "</p>" + "<br>" + period.description() + "<br>" +
+                                    "</div>";
+                            str += "<div class='section-value-organization'>"
+                                    + startAndEnd + "<br>" + titleAndDescription +
+                                    "</div>";
+                        }
+                    }
+                }
             }
         }
         return str;

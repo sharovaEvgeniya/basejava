@@ -27,10 +27,14 @@ hr {
     text-align: right;
     color: #4A586E;
 }
+
 .form {
     height: 100%;
+    flex: 1 0 auto;
 }
+
 .full-name {
+    font-weight: bold;
     margin-left: 15%;
     margin-top: 15px;
     color: #4A586E;
@@ -60,6 +64,32 @@ hr {
 
 .section-value {
     margin-left: 15%;
+    margin-top: 15px;
+    color: #4A586E;
+    text-align: left;
+    font-size: 15px;
+}
+
+.section-value-organization {
+    display: flex;
+    margin-top: 15px;
+    color: #4A586E;
+    text-align: left;
+    font-size: 15px;
+}
+
+.section-period-time {
+    font-weight: bold;
+    width: 30%;
+    margin-top: 30px;
+    color: #4A586E;
+    text-align: right;
+    font-size: 15px;
+}
+
+.section-period-value {
+    width: 70%;
+    margin-left: 5%;
     margin-top: 15px;
     color: #4A586E;
     text-align: left;
@@ -98,6 +128,19 @@ hr {
 
 .table tbody tr:nth-child(even) {
     background: #EDEFF2;
+}
+
+.link-website {
+    font-weight: bold;
+    margin-left: 22%;
+    text-align: left;
+    font-size: 18px;
+    color: #169FE1;
+}
+
+.period-title {
+    font-weight: bold;
+    font-size: 16px;
 }
 
 a {

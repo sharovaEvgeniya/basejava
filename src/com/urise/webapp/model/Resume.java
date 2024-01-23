@@ -105,6 +105,20 @@ public class Resume implements Comparable<Resume>, Serializable {
                         str += string + ".";
                     }
                 }
+                case EDUCATION, EXPERIENCE -> {
+                    OrganizationSection organizationSection = (OrganizationSection) sections.get(type);
+                    if (organizationSection == null) {
+                        return "";
+                    }
+                    List<Organization> orgList = organizationSection.getOrganization();
+                    for (Organization org : orgList) {
+                        List<Organization.Period> periods = org.periods();
+                        for (Organization.Period period : periods) {
+                            str = period.start() + " —— " + period.end() + "  " +
+                                    period.title() + "\n" + period.description() + "\n";
+                        }
+                    }
+                }
             }
         }
         return str;

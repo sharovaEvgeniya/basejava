@@ -2,6 +2,8 @@ package com.urise.webapp;
 
 import com.urise.webapp.model.*;
 
+import java.time.LocalDate;
+import java.time.Month;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -24,34 +26,35 @@ public class ResumeTestData {
         List<String> achievementOrQualification = new ArrayList<>();
         achievementOrQualification.add("achievement or qualification");
         achievementOrQualification.add("lorem lorem lorem");
-//
-//        LocalDate start1 = LocalDate.of(9999, Month.SEPTEMBER, 1);
-//        LocalDate end1 = LocalDate.of(9999, Month.JANUARY, 1);
-//        Organization.Period period1 = new Organization.Period(start1, end1, "title", "description");
-//
-//        LocalDate start2 = LocalDate.of(8888, Month.OCTOBER, 1);
-//        LocalDate end2 = LocalDate.of(8888, Month.NOVEMBER, 1);
-//        Organization.Period period2 = new Organization.Period(start2, end2, "title", "description");
-//
-//        List<Organization.Period> experienceOrEducation = new ArrayList<>();
-//        experienceOrEducation.add(period1);
-//        experienceOrEducation.add(period2);
-//
-//        Organization organization = new Organization("title", "website", experienceOrEducation);
-//
-//        List<Organization> organizations = new ArrayList<>();
-//        organizations.add(organization);
-//
+
+        LocalDate start1 = LocalDate.of(1990, Month.SEPTEMBER, 10);
+        LocalDate end1 = LocalDate.of(2000, Month.JANUARY, 12);
+        Organization.Period period1 = new Organization.Period(start1, end1, "Старший разработчик (backend)",
+                "Проектирование и разработка онлайн платформы управления проектами Wrike (Java 8 API, Maven, Spring, MyBatis, Guava, Vaadin, PostgreSQL, Redis). " +
+                        "Двухфакторная аутентификация, авторизация по OAuth1, OAuth2, JWT SSO.");
+
+        LocalDate start2 = LocalDate.of(2000, Month.OCTOBER, 12);
+        LocalDate end2 = LocalDate.of(2010, Month.NOVEMBER, 30);
+        Organization.Period period2 = new Organization.Period(start2, end2, "Автор проекта.", "Создание, организация и проведение Java онлайн проектов и стажировок.");
+
+        List<Organization.Period> experienceOrEducation = new ArrayList<>();
+        experienceOrEducation.add(period1);
+        experienceOrEducation.add(period2);
+
+        Organization organization = new Organization("Java Online Projects", "http://javaops.ru/", experienceOrEducation);
+
+        List<Organization> organizations = new ArrayList<>();
+        organizations.add(organization);
+
         Map<SectionType, Section> sections = new EnumMap<>(SectionType.class);
         sections.put(OBJECTIVE, new TextSection("objective"));
         sections.put(PERSONAL, new TextSection("personal"));
         sections.put(ACHIEVEMENT, new ListSection(achievementOrQualification));
         sections.put(QUALIFICATION, new ListSection(achievementOrQualification));
-//        sections.put(EXPERIENCE, new OrganizationSection(organizations));
-//        sections.put(EDUCATION, new OrganizationSection(organizations));
-//
-//        return new Resume(uuid, fullName, contacts, sections);
-        return new Resume(uuid, fullName, contacts,sections);
+        sections.put(EXPERIENCE, new OrganizationSection(organizations));
+        sections.put(EDUCATION, new OrganizationSection(organizations));
+
+        return new Resume(uuid, fullName, contacts, sections);
     }
 
     public static void main(String[] args) {
@@ -80,9 +83,9 @@ public class ResumeTestData {
                     for (Organization org : organizations) {
                         System.out.println(org.title() + "   " + org.website());
                         List<Organization.Period> periods = org.periods();
-                        for (Organization.Period periodList : periods) {
-                            System.out.println(periodList.start() + " —— " + periodList.end() + "  "
-                                    + periodList.title() + "\n" + periodList.description() + "\n");
+                        for (Organization.Period period : periods) {
+                            System.out.println(period.start() + " —— " + period.end() + "  "
+                                    + period.title() + "\n" + period.description() + "\n");
                         }
                     }
                 }
