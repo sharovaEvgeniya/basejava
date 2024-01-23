@@ -77,9 +77,10 @@ public class ResumeServlet extends HttpServlet {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
-                    case PERSONAL, OBJECTIVE -> resume.addSection(type, new TextSection(value.trim()));
+                    case PERSONAL, OBJECTIVE ->
+                            resume.addSection(type, new TextSection(value.trim().replaceAll("\\s+", " ")));
                     case ACHIEVEMENT, QUALIFICATION -> {
-                        List<String> stringList = Arrays.stream(value.trim().split("\\.")).toList();
+                        List<String> stringList = Arrays.stream(value.trim().replaceAll("\\s+", " ").split("\\.")).toList();
                         resume.addSection(type, new ListSection(stringList));
                     }
                 }
