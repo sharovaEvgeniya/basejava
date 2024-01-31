@@ -9,9 +9,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -44,7 +42,27 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> r = storage.get(uuid);
+            case "view" -> {
+                r = storage.get(uuid);
+
+            }
+            case "edit" -> {
+                r = storage.get(uuid);
+                for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
+                    switch (entry.getKey()) {
+                        case EDUCATION -> {
+                            OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
+                            List<Organization> organizations = organizationSection.getOrganization();
+                            for(Organization org : organizations) {
+                                String title = org.title();
+                                String website = org.website();
+                                Organization.Period period = new Organization.Period();
+                                
+                            }
+                        }
+                    }
+                }
+            }
             default -> throw new IllegalArgumentException("Action " + action + "  is illegal");
         }
         request.setAttribute("resume", r);

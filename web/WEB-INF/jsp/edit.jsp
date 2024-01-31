@@ -1,5 +1,6 @@
-<%@ page import="com.urise.webapp.model.ContactType" %>
-<%@ page import="com.urise.webapp.model.SectionType" %>
+<%@ page import="java.util.Map" %>
+<%@ page import="com.urise.webapp.model.*" %>
+<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -31,11 +32,47 @@
             </dl>
             </c:forEach>
             <h3>Sections:</h3>
+
             <c:forEach var="type" items="<%=SectionType.values()%>">
-                <dl>
-                    <dt>${type.title}</dt>
-                    <dd><textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea></dd>
-                </dl>
+                <c:set var="section" value="${resume.getSection(type)}"/>
+                <jsp:useBean id="section" type="com.urise.webapp.model.Section" scope="request"/>
+                <c:choose>
+                    <c:when test="${type == 'OBJECTIVE'}">
+                        ${System.out.println(section)}
+                        <dt>${type.title}</dt>
+                        <dd><input type="text" name="${type.name()}" placeholder="${type.title}" size=100
+                                   value="${resume.toHtml(type)}"></dd>
+                    </c:when>
+                    <c:when test="${type == 'PERSONAL'}">
+                        <dt>${type.title}</dt>
+                        <dd><input type="text" name="${type.name()}" placeholder="${type.title}" size=100
+                                   value="${resume.toHtml(type)}"></dd>
+                    </c:when>
+
+                    <c:when test="${type == 'ACHIEVEMENT'}">
+                        <dt>${type.title}</dt>
+                        <dd>
+                            <textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea>
+                        </dd>
+                    </c:when>
+                    <c:when test="${type == 'QUALIFICATION'}">
+
+                        <dt>${type.title}</dt>
+                        <dd>
+                            <textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea>
+                        </dd>
+                    </c:when>
+                    <c:when test="${type == 'EXPERIENCE'}">
+                        <c:forEach var="org" items="${section}">
+                            <%
+                                OrganizationSection organizationSection = (OrganizationSection) resume.getSection(SectionType.EXPERIENCE);
+                                if (organizationSection == null) {
+                                }
+                            %>
+                        </c:forEach>
+                    </c:when>
+                </c:choose>
+
             </c:forEach>
 
             </p>

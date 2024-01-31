@@ -114,7 +114,7 @@ public class Resume implements Comparable<Resume>, Serializable {
                     for (Organization org : orgList) {
                         List<Organization.Period> periods = org.periods();
                         for (Organization.Period period : periods) {
-                            str = period.start() + " —— " + period.end() + "  " +
+                            str = period.start() + " — " + period.end() + "  " +
                                     period.title() + "\n" + period.description() + "\n";
                         }
                     }
