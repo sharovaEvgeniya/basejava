@@ -35,7 +35,6 @@
 
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <c:set var="section" value="${resume.getSection(type)}"/>
-                <jsp:useBean id="section" type="com.urise.webapp.model.Section" scope="request"/>
                 <c:choose>
                     <c:when test="${type == 'OBJECTIVE'}">
                         ${System.out.println(section)}
@@ -56,25 +55,39 @@
                         </dd>
                     </c:when>
                     <c:when test="${type == 'QUALIFICATION'}">
-
                         <dt>${type.title}</dt>
                         <dd>
                             <textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea>
                         </dd>
                     </c:when>
                     <c:when test="${type == 'EXPERIENCE'}">
-                        <c:forEach var="org" items="${section}">
-                            <%
-                                OrganizationSection organizationSection = (OrganizationSection) resume.getSection(SectionType.EXPERIENCE);
-                                if (organizationSection == null) {
-                                }
-                            %>
-                        </c:forEach>
+                        <dt>${type.title}</dt>
+                        <dd>
+                            <input type="text" name="title" placeholder="company-title" size="30" value="">
+                            <input type="text" name="website" placeholder="company-website" size="30" value="">
+                        </dd>
+                        <dd>
+                            <input type="text" name="start" placeholder="Начало" size="10" value="">
+                            <input type="text" name="end" placeholder="Конец" size="10" value="">
+                            <textarea name="" cols="" placeholder="Должность"></textarea>
+                            <textarea name="" cols="100" placeholder="Описание"></textarea>
+                        </dd>
+                    </c:when>
+                    <c:when test="${type == 'EDUCATION'}">
+                        <dt>${type.title}</dt>
+                        <dd>
+                            <input type="text" name="title" placeholder="company-title" size="30" value="">
+                            <input type="text" name="website" placeholder="company-website" size="30" value="">
+                        </dd>
+                        <dd>
+                            <input type="text" name="start" placeholder="Начало" size="10" value="">
+                            <input type="text" name="end" placeholder="Конец" size="10" value="">
+                            <textarea name="" cols="" placeholder="Должность"></textarea>
+                            <textarea name="" cols="100" placeholder="Описание"></textarea>
+                        </dd>
                     </c:when>
                 </c:choose>
-
             </c:forEach>
-
             </p>
             <button type="submit">Save</button>
             <button class="delete" type="reset" onclick="window.history.back()">Cancel</button>

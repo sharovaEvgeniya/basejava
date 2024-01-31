@@ -50,6 +50,17 @@ public class ResumeServlet extends HttpServlet {
                 r = storage.get(uuid);
                 for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
                     switch (entry.getKey()) {
+                        case OBJECTIVE -> {
+                            TextSection textSection = (TextSection) entry.getValue();
+                        }
+                        case PERSONAL -> {
+                        }
+                        case ACHIEVEMENT -> {
+                        }
+                        case QUALIFICATION -> {
+                        }
+                        case EXPERIENCE -> {
+                        }
                         case EDUCATION -> {
                             OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
                             List<Organization> organizations = organizationSection.getOrganization();
@@ -92,6 +103,7 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType type : SectionType.values()) {
+
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
@@ -100,6 +112,9 @@ public class ResumeServlet extends HttpServlet {
                     case ACHIEVEMENT, QUALIFICATION -> {
                         List<String> stringList = Arrays.stream(value.trim().replaceAll("\\s+", " ").split("\\.")).toList();
                         resume.addSection(type, new ListSection(stringList));
+                    }
+                    case EDUCATION, EXPERIENCE -> {
+
                     }
                 }
             } else {
