@@ -60,12 +60,16 @@
                                 <input type="text" name="website" placeholder="company-website" size="30"
                                        value="${organization.website()}">
                             </dd>
-                            <dd>
-                                <input type="text" name="start" placeholder="Начало" size="10" value="">
-                                <input type="text" name="end" placeholder="Конец" size="10" value="">
-                                <textarea name="" cols="" placeholder="Должность"></textarea>
-                                <textarea name="" cols="100" placeholder="Описание"></textarea>
-                            </dd>
+                            <c:forEach var="period" items="${organization.periods}">
+                                <dd>
+                                    <input type="text" name="start" placeholder="Начало" size="10"
+                                           value="${period.start()}">
+                                    <input type="text" name="end" placeholder="Конец" size="10" value="${period.end()}">
+                                    <textarea name="" cols="" placeholder="Должность">${period.title()}</textarea>
+                                    <textarea name="" cols="100"
+                                              placeholder="Описание">${period.description()}</textarea>
+                                </dd>
+                            </c:forEach>
                         </c:forEach>
                     </c:when>
                 </c:choose>
