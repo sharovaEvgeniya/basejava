@@ -43,6 +43,7 @@ public final class Organization implements Serializable {
         return title;
     }
 
+
     public void setTitle(String title) {
         this.title = title;
     }
@@ -51,11 +52,24 @@ public final class Organization implements Serializable {
         return website;
     }
 
+
+    public List<Period> periods() {
+        return periods;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getWebsite() {
+        return website;
+    }
+
     public void setWebsite(String website) {
         this.website = website;
     }
 
-    public List<Period> periods() {
+    public List<Period> getPeriods() {
         return periods;
     }
 
@@ -130,6 +144,38 @@ public final class Organization implements Serializable {
 
         public String description() {
             return description;
+        }
+
+        public LocalDate getStart() {
+            return start;
+        }
+
+        public void setStart(LocalDate start) {
+            this.start = start;
+        }
+
+        public LocalDate getEnd() {
+            return end;
+        }
+
+        public void setEnd(LocalDate end) {
+            this.end = end;
+        }
+
+        public String getTitle() {
+            return title;
+        }
+
+        public void setTitle(String title) {
+            this.title = title;
+        }
+
+        public String getDescription() {
+            return description;
+        }
+
+        public void setDescription(String description) {
+            this.description = description;
         }
 
         @Override

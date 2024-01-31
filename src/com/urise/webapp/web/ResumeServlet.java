@@ -9,7 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
     private Storage storage;
@@ -44,31 +47,19 @@ public class ResumeServlet extends HttpServlet {
             }
             case "view" -> {
                 r = storage.get(uuid);
-
             }
             case "edit" -> {
                 r = storage.get(uuid);
                 for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
                     switch (entry.getKey()) {
-                        case OBJECTIVE -> {
-                            TextSection textSection = (TextSection) entry.getValue();
-                        }
-                        case PERSONAL -> {
-                        }
-                        case ACHIEVEMENT -> {
-                        }
-                        case QUALIFICATION -> {
-                        }
-                        case EXPERIENCE -> {
-                        }
                         case EDUCATION -> {
                             OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
                             List<Organization> organizations = organizationSection.getOrganization();
-                            for(Organization org : organizations) {
+                            for (Organization org : organizations) {
                                 String title = org.title();
                                 String website = org.website();
                                 Organization.Period period = new Organization.Period();
-                                
+
                             }
                         }
                     }
@@ -103,7 +94,6 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType type : SectionType.values()) {
-
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {

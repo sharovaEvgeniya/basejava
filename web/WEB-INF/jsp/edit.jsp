@@ -35,29 +35,32 @@
 
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <c:set var="section" value="${resume.getSection(type)}"/>
+                <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
                 <c:choose>
                     <c:when test="${type == 'OBJECTIVE'}">
-                        ${System.out.println(section)}
                         <dt>${type.title}</dt>
                         <dd><input type="text" name="${type.name()}" placeholder="${type.title}" size=100
-                                   value="${resume.toHtml(type)}"></dd>
+                                   value="<%=((TextSection)section).getContent()%>"></dd>
                     </c:when>
                     <c:when test="${type == 'PERSONAL'}">
                         <dt>${type.title}</dt>
-                        <dd><input type="text" name="${type.name()}" placeholder="${type.title}" size=100
-                                   value="${resume.toHtml(type)}"></dd>
+                        <dd>
+                            <textarea name="${type.name()}"
+                                      cols="100"><%=((TextSection) section).getContent()%></textarea>
+                        </dd>
                     </c:when>
-
                     <c:when test="${type == 'ACHIEVEMENT'}">
                         <dt>${type.title}</dt>
                         <dd>
-                            <textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea>
+                            <textarea name="${type.name()}"
+                                      cols="100"><%=String.join("\n", ((ListSection) section).getStrings())%></textarea>
                         </dd>
                     </c:when>
                     <c:when test="${type == 'QUALIFICATION'}">
                         <dt>${type.title}</dt>
                         <dd>
-                            <textarea name="${type.name()}" cols="100">${resume.toHtml(type)}</textarea>
+                            <textarea name="${type.name()}"
+                                      cols="100"><%=String.join("\n", ((ListSection) section).getStrings())%></textarea>
                         </dd>
                     </c:when>
                     <c:when test="${type == 'EXPERIENCE'}">
