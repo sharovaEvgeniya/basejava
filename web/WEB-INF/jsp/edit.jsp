@@ -37,57 +37,36 @@
                 <c:set var="section" value="${resume.getSection(type)}"/>
                 <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
                 <c:choose>
-                    <c:when test="${type == 'OBJECTIVE'}">
-                        <dt>${type.title}</dt>
-                        <dd><input type="text" name="${type.name()}" placeholder="${type.title}" size=100
-                                   value="<%=((TextSection)section).getContent()%>"></dd>
-                    </c:when>
-                    <c:when test="${type == 'PERSONAL'}">
+                    <c:when test="${type == 'OBJECTIVE' || type == 'PERSONAL'}">
                         <dt>${type.title}</dt>
                         <dd>
                             <textarea name="${type.name()}"
                                       cols="100"><%=((TextSection) section).getContent()%></textarea>
                         </dd>
                     </c:when>
-                    <c:when test="${type == 'ACHIEVEMENT'}">
+                    <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATION'}">
                         <dt>${type.title}</dt>
                         <dd>
                             <textarea name="${type.name()}"
                                       cols="100"><%=String.join("\n", ((ListSection) section).getStrings())%></textarea>
                         </dd>
                     </c:when>
-                    <c:when test="${type == 'QUALIFICATION'}">
-                        <dt>${type.title}</dt>
-                        <dd>
-                            <textarea name="${type.name()}"
-                                      cols="100"><%=String.join("\n", ((ListSection) section).getStrings())%></textarea>
-                        </dd>
-                    </c:when>
-                    <c:when test="${type == 'EXPERIENCE'}">
-                        <dt>${type.title}</dt>
-                        <dd>
-                            <input type="text" name="title" placeholder="company-title" size="30" value="">
-                            <input type="text" name="website" placeholder="company-website" size="30" value="">
-                        </dd>
-                        <dd>
-                            <input type="text" name="start" placeholder="Начало" size="10" value="">
-                            <input type="text" name="end" placeholder="Конец" size="10" value="">
-                            <textarea name="" cols="" placeholder="Должность"></textarea>
-                            <textarea name="" cols="100" placeholder="Описание"></textarea>
-                        </dd>
-                    </c:when>
-                    <c:when test="${type == 'EDUCATION'}">
-                        <dt>${type.title}</dt>
-                        <dd>
-                            <input type="text" name="title" placeholder="company-title" size="30" value="">
-                            <input type="text" name="website" placeholder="company-website" size="30" value="">
-                        </dd>
-                        <dd>
-                            <input type="text" name="start" placeholder="Начало" size="10" value="">
-                            <input type="text" name="end" placeholder="Конец" size="10" value="">
-                            <textarea name="" cols="" placeholder="Должность"></textarea>
-                            <textarea name="" cols="100" placeholder="Описание"></textarea>
-                        </dd>
+                    <c:when test="${type == 'EXPERIENCE' || type == 'EDUCATION'}">
+                        <c:forEach var="organization" items="<%=((OrganizationSection) section).getOrganization()%>">
+                            <dt>${type.title}</dt>
+                            <dd>
+                                <input type="text" name="title" placeholder="company-title" size="30"
+                                       value="${organization.title()}">
+                                <input type="text" name="website" placeholder="company-website" size="30"
+                                       value="${organization.website()}">
+                            </dd>
+                            <dd>
+                                <input type="text" name="start" placeholder="Начало" size="10" value="">
+                                <input type="text" name="end" placeholder="Конец" size="10" value="">
+                                <textarea name="" cols="" placeholder="Должность"></textarea>
+                                <textarea name="" cols="100" placeholder="Описание"></textarea>
+                            </dd>
+                        </c:forEach>
                     </c:when>
                 </c:choose>
             </c:forEach>
