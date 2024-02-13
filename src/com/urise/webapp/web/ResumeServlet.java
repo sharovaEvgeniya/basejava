@@ -9,9 +9,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class ResumeServlet extends HttpServlet {
@@ -45,25 +46,8 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view" -> {
+            case "view", "edit" -> {
                 r = storage.get(uuid);
-            }
-            case "edit" -> {
-                r = storage.get(uuid);
-                for (Map.Entry<SectionType, Section> entry : r.getSections().entrySet()) {
-                    switch (entry.getKey()) {
-                        case EDUCATION -> {
-                            OrganizationSection organizationSection = (OrganizationSection) entry.getValue();
-                            List<Organization> organizations = organizationSection.getOrganization();
-                            for (Organization org : organizations) {
-                                String title = org.title();
-                                String website = org.website();
-                                Organization.Period period = new Organization.Period();
-
-                            }
-                        }
-                    }
-                }
             }
             default -> throw new IllegalArgumentException("Action " + action + "  is illegal");
         }
@@ -104,7 +88,8 @@ public class ResumeServlet extends HttpServlet {
                         resume.addSection(type, new ListSection(stringList));
                     }
                     case EDUCATION, EXPERIENCE -> {
-
+                        OrganizationSection organizationSection = setOrganization(request, type);
+                        resume.addSection(type, organizationSection);
                     }
                 }
             } else {
@@ -121,5 +106,40 @@ public class ResumeServlet extends HttpServlet {
         } catch (ClassNotFoundException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    private OrganizationSection setOrganization(HttpServletRequest request, SectionType type) {
+        List<Organization> organizationList = new ArrayList<>();
+        String[] nameOrganization = request.getParameterValues(type.name() + "orgName");
+        String[] linkOrganization = request.getParameterValues(type.name() + "website");
+        for (int i = 0; i < nameOrganization.length; i++) {
+            if (isPresent(nameOrganization[i])) {
+                List<Organization.Period> periodList = setPeriod(
+                        request.getParameterValues(type.name() + i + "startDate"),
+                        request.getParameterValues(type.name() + i + "endDate"),
+                        request.getParameterValues(type.name() + i + "title"),
+                        request.getParameterValues(type.name() + i + "description"));
+                organizationList.add(new Organization(nameOrganization[i], linkOrganization[i], periodList));
+            }
+        }
+        return organizationList.size() == 0 ? null : new OrganizationSection(organizationList);
+    }
+
+    private static List<Organization.Period> setPeriod(String[] startDate, String[] endDate, String[] title, String[] description) {
+        List<Organization.Period> periodList = new ArrayList<>();
+        for (int i = 0; i < title.length; i++) {
+            if (isPresent(startDate[i]) && isPresent(title[i])) {
+                periodList.add(new Organization.Period(checkDate(startDate[i]), checkDate(endDate[i]), title[i], description[i]));
+            }
+        }
+        return periodList.isEmpty() ? null : periodList;
+    }
+
+    private static LocalDate checkDate(String line) {
+        return line.isEmpty() ? null : LocalDate.parse(line);
+    }
+
+    private static boolean isPresent(String line) {
+        return line != null && !line.isEmpty();
     }
 }

@@ -1,6 +1,7 @@
-<%@ page import="java.util.Map" %>
+<%@ page import="com.urise.webapp.model.ContactType" %>
+<%@ page import="com.urise.webapp.util.DateUtil" %>
+<%@ page import="java.time.LocalDate" %>
 <%@ page import="com.urise.webapp.model.*" %>
-<%@ page import="java.util.List" %>
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
@@ -32,51 +33,59 @@
             </dl>
             </c:forEach>
             <h3>Sections:</h3>
-
-            <c:forEach var="type" items="<%=SectionType.values()%>">
-                <c:set var="section" value="${resume.getSection(type)}"/>
-                <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
-                <c:choose>
-                    <c:when test="${type == 'OBJECTIVE' || type == 'PERSONAL'}">
-                        <dt>${type.title}</dt>
-                        <dd>
-                            <textarea name="${type.name()}"
-                                      cols="100"><%=((TextSection) section).getContent()%></textarea>
-                        </dd>
-                    </c:when>
-                    <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATION'}">
-                        <dt>${type.title}</dt>
-                        <dd>
-                            <textarea name="${type.name()}"
-                                      cols="100"><%=String.join("\n", ((ListSection) section).getStrings())%></textarea>
-                        </dd>
-                    </c:when>
-                    <c:when test="${type == 'EXPERIENCE' || type == 'EDUCATION'}">
-                        <c:forEach var="organization" items="<%=((OrganizationSection) section).getOrganization()%>">
+            <table>
+                <c:forEach var="sectionEntry" items="${resume.sections}">
+                    <jsp:useBean id="sectionEntry"
+                                 type="java.util.Map.Entry<com.urise.webapp.model.SectionType, com.urise.webapp.model.Section>"/>
+                    <c:set var="type" value="${sectionEntry.key}"/>
+                    <c:set var="section" value="${sectionEntry.value}"/>
+                    <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
+                    <c:choose>
+                        <c:when test="${type == 'OBJECTIVE' || type == 'PERSONAL'}">
                             <dt>${type.title}</dt>
                             <dd>
-                                <input type="text" name="title" placeholder="company-title" size="30"
-                                       value="${organization.title()}">
-                                <input type="text" name="website" placeholder="company-website" size="30"
-                                       value="${organization.website()}">
+                            <textarea name="${type.name()}"
+                                      cols="100"><%=((TextSection) section).getContent()%></textarea>
                             </dd>
-                            <c:forEach var="period" items="${organization.periods}">
+                        </c:when>
+                        <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATION'}">
+                            <dt>${type.title}</dt>
+                            <dd>
+                            <textarea name="${type.name()}"
+                                      cols="100"><%=String.join("\n", ((ListSection) section).getStrings())%></textarea>
+                            </dd>
+                        </c:when>
+                        <c:when test="${type == 'EXPERIENCE' || type == 'EDUCATION'}">
+                            <c:forEach var="organization"
+                                       items="<%=((OrganizationSection) section).getOrganization()%>" varStatus="counter">
+                                <dt>${type.title}</dt>
                                 <dd>
-                                    <input type="text" name="start" placeholder="Начало" size="10"
-                                           value="${period.start()}">
-                                    <input type="text" name="end" placeholder="Конец" size="10" value="${period.end()}">
-                                    <textarea name="" cols="" placeholder="Должность">${period.title()}</textarea>
-                                    <textarea name="" cols="100"
-                                              placeholder="Описание">${period.description()}</textarea>
+                                    <input type="text" name="${type.name()}orgName" placeholder="company-title" size="30"
+                                           value="${organization.title()}">
+                                    <input type="text" name="${type.name()}website" placeholder="company-website" size="30"
+                                           value="${organization.website()}">
                                 </dd>
+                                <c:forEach var="period" items="${organization.periods}">
+                                    <jsp:useBean id="period" type="com.urise.webapp.model.Organization.Period"/>
+                                    <dd>
+
+                                        <input type="text" name="${type.name()}${counter}startDate" placeholder="Начало" size="10"
+                                               value="${period.start()}">
+                                        <input type="text" name="${type.name()}${counter}endDate" placeholder="Конец" size="10"
+                                               value="${period.end()}">
+                                        <textarea name="${type.name()}${counter}title" cols="" placeholder="Должность">${period.title()}</textarea>
+                                        <textarea name="${type.name()}${counter}description" cols="100"
+                                                  placeholder="Описание">${period.description()}</textarea>
+                                    </dd>
+                                </c:forEach>
                             </c:forEach>
-                        </c:forEach>
-                    </c:when>
-                </c:choose>
-            </c:forEach>
-            </p>
-            <button type="submit">Save</button>
-            <button class="delete" type="reset" onclick="window.history.back()">Cancel</button>
+                        </c:when>
+                    </c:choose>
+                </c:forEach>
+            </table>
+        </div>
+        <button type="submit">Save</button>
+        <button class="delete" type="reset" onclick="window.history.back()">Cancel</button>
         </div>
     </form>
 </section>

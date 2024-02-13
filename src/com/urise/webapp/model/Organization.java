@@ -20,6 +20,7 @@ import static com.urise.webapp.util.DateUtil.of;
 public final class Organization implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+    public static final Organization EMPTY = new Organization("", "", Period.EMPTY);
     private String title;
     private String website;
     private List<Period> periods;
@@ -43,15 +44,9 @@ public final class Organization implements Serializable {
         return title;
     }
 
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
     public String website() {
         return website;
     }
-
 
     public List<Period> periods() {
         return periods;
@@ -60,6 +55,11 @@ public final class Organization implements Serializable {
     public String getTitle() {
         return title;
     }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
 
     public String getWebsite() {
         return website;
@@ -102,6 +102,7 @@ public final class Organization implements Serializable {
     public static final class Period implements Serializable {
         @Serial
         private static final long serialVersionUID = 1L;
+        public static final Period EMPTY = new Period();
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
         private LocalDate start;
         @XmlJavaTypeAdapter(XmlLocalDateAdapter.class)
