@@ -33,7 +33,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     case ACHIEVEMENT, QUALIFICATION ->
                             writeWithException(((ListSection) entry.getValue()).getStrings(), dos, dos::writeUTF);
                     case EXPERIENCE, EDUCATION ->
-                            writeWithException(((OrganizationSection) entry.getValue()).getOrganization(), dos, organization -> {
+                            writeWithException(((OrganizationSection) entry.getValue()).getOrganizations(), dos, organization -> {
                                 dos.writeUTF(organization.title());
                                 dos.writeUTF(organization.website());
                                 writeWithException(organization.periods(), dos, period -> {
@@ -52,15 +52,15 @@ public class DataStreamSerializer implements StreamSerializer {
         try (DataInputStream dis = new DataInputStream(inputStream)) {
             Resume resume = new Resume(dis.readUTF(), dis.readUTF());
 
-            readElementWithException(dis, () -> resume.addContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
+            readElementWithException(dis, () -> resume.setContact(ContactType.valueOf(dis.readUTF()), dis.readUTF()));
 
             readElementWithException(dis, () -> {
                 final SectionType sectionType = SectionType.valueOf(dis.readUTF());
                 switch (sectionType) {
-                    case PERSONAL, OBJECTIVE -> resume.addSection(sectionType, new TextSection(dis.readUTF()));
+                    case PERSONAL, OBJECTIVE -> resume.setSection(sectionType, new TextSection(dis.readUTF()));
                     case ACHIEVEMENT, QUALIFICATION ->
-                            resume.addSection(sectionType, new ListSection(readCollectionWithException(dis, dis::readUTF)));
-                    case EXPERIENCE, EDUCATION -> resume.addSection(sectionType,
+                            resume.setSection(sectionType, new ListSection(readCollectionWithException(dis, dis::readUTF)));
+                    case EXPERIENCE, EDUCATION -> resume.setSection(sectionType,
                             new OrganizationSection(
                                     readCollectionWithException(dis, () ->
                                             new Organization(dis.readUTF(), dis.readUTF(), readCollectionWithException(dis, () ->

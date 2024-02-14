@@ -76,7 +76,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         return contacts.get(type);
     }
 
-    public void addContact(ContactType type, String value) {
+    public void setContact(ContactType type, String value) {
         contacts.put(type, value);
     }
 
@@ -110,7 +110,7 @@ public class Resume implements Comparable<Resume>, Serializable {
                     if (organizationSection == null) {
                         return "";
                     }
-                    List<Organization> orgList = organizationSection.getOrganization();
+                    List<Organization> orgList = organizationSection.getOrganizations();
                     for (Organization org : orgList) {
                         List<Organization.Period> periods = org.periods();
                         for (Organization.Period period : periods) {
@@ -124,7 +124,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         return str;
     }
 
-    public void addSection(SectionType type, Section section) {
+    public void setSection(SectionType type, Section section) {
         sections.put(type, section);
     }
 

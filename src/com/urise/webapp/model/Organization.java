@@ -25,7 +25,9 @@ public final class Organization implements Serializable {
     private String website;
     private List<Period> periods;
 
-    public Organization() {
+    public Organization(String website, List<Period> periods) {
+        this.website = website;
+        this.periods = periods;
     }
 
     public Organization(String title, String website, Period... periods) {

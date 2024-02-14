@@ -2,6 +2,7 @@ package com.urise.webapp.web;
 
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -11,7 +12,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -46,8 +46,24 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "view", "edit" -> {
+            case "view" -> r = storage.get(uuid);
+
+            case "edit" -> {
                 r = storage.get(uuid);
+                for (SectionType type : new SectionType[]{SectionType.EXPERIENCE, SectionType.EDUCATION}) {
+                    OrganizationSection section = (OrganizationSection) r.getSection(type);
+                    List<Organization> emptyFirstOrganizations = new ArrayList<>();
+                    emptyFirstOrganizations.add(Organization.EMPTY);
+                    if (section != null) {
+                        for (Organization organization : section.getOrganizations()) {
+                            List<Organization.Period> emptyFirstPeriod = new ArrayList<>();
+                            emptyFirstPeriod.add(Organization.Period.EMPTY);
+                            emptyFirstPeriod.addAll(organization.getPeriods());
+                            emptyFirstOrganizations.add(new Organization(organization.website(), emptyFirstPeriod));
+                        }
+                    }
+                    r.setSection(type, new OrganizationSection(emptyFirstOrganizations));
+                }
             }
             default -> throw new IllegalArgumentException("Action " + action + "  is illegal");
         }
@@ -72,28 +88,16 @@ public class ResumeServlet extends HttpServlet {
         for (ContactType type : ContactType.values()) {
             String value = request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
-                resume.addContact(type, value.trim());
+                resume.setContact(type, value.trim());
             } else {
                 resume.getContacts().remove(type);
             }
         }
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
-                switch (type) {
-                    case PERSONAL, OBJECTIVE ->
-                            resume.addSection(type, new TextSection(value.trim().replaceAll("\\s+", " ")));
-                    case ACHIEVEMENT, QUALIFICATION -> {
-                        List<String> stringList = Arrays.stream(value.trim().replaceAll("\\s+", " ").split("\\.")).toList();
-                        resume.addSection(type, new ListSection(stringList));
-                    }
-                    case EDUCATION, EXPERIENCE -> {
-                        OrganizationSection organizationSection = setOrganization(request, type);
-                        resume.addSection(type, organizationSection);
-                    }
-                }
-            } else {
-                resume.getSections().remove(type);
+            String[] values = request.getParameterValues(type.name());
+            if(HtmlUtil.isEmpty(value) && values.length < 2) {
+
             }
         }
         storage.update(resume);

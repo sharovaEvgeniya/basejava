@@ -51,7 +51,7 @@ public enum SectionType {
                     str += "</div>";
                 }
                 case EDUCATION, EXPERIENCE -> {
-                    List<Organization> orgList = ((OrganizationSection) section).getOrganization();
+                    List<Organization> orgList = ((OrganizationSection) section).getOrganizations();
                     for (Organization org : orgList) {
                         str = "<div class='section-title'>" + type.title + ": <br>" +
                                 "<a class='link-website' href='" + org.website() + "'>" + org.title() + "</a>" +

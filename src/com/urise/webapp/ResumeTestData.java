@@ -78,7 +78,7 @@ public class ResumeTestData {
                     }
                 }
                 case EXPERIENCE, EDUCATION -> {
-                    List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganization();
+                    List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
                     System.out.println(entry.getKey().getTitle() + " :\n");
                     for (Organization org : organizations) {
                         System.out.println(org.title() + "   " + org.website());
