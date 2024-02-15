@@ -39,7 +39,7 @@
                 <h3><a>${type.title}</a></h3>
                 <c:choose>
                     <c:when test="${type == 'OBJECTIVE'}">
-                        <input type="text" name="${type.name()}" size="75" value="<%=((TextSection)section).getContent()%>">
+                        <input type="text" name="${type}" size="75" value="<%=((TextSection)section).getContent()%>">
                     </c:when>
                     <c:when test="${type == 'PERSONAL'}">
                         <textarea name="${type}" cols="75" rows="5"><%=((TextSection) section).getContent()%></textarea>
@@ -54,11 +54,11 @@
                                    varStatus="counter">
                             <dl>
                                 <dt>Название учереждения:</dt>
-                                <dd><input type="text" name="${type.name()}title" size="100" value="${org.title}"></dd>
+                                <dd><input type="text" name="${type.name()}orgName" size="100" value="${org.title}"></dd>
                             </dl>
                             <dl>
                                 <dt>Сайт учереждения:</dt>
-                                <dd><input type="text" name="${type.name()}website" size="100" value="${org.website}"></dd>
+                                <dd><input type="text" name="${type.name()}url" size="100" value="${org.url}"></dd>
                             </dl>
                             <br>
                             <div style="margin-left: 30px">
@@ -67,7 +67,7 @@
                                     <dl>
                                         <dt>Начальная дата:</dt>
                                         <dd>
-                                            <input type="text" name="${type}${counter.index}startDate" size="10"
+                                            <input type="text" name="${type.name()}${counter.index}startDate" size="10"
                                                    value="<%=DateUtil.format(period.getStart())%>"
                                                    placeholder="MM/yyyy">
                                         </dd>
@@ -75,7 +75,7 @@
                                     <dl>
                                         <dt>Конечная дата:</dt>
                                         <dd>
-                                            <input type="text" name="${type}${counter.index}endDate" size="10"
+                                            <input type="text" name="${type.name()}${counter.index}endDate" size="10"
                                                    value="<%=DateUtil.format(period.getEnd())%>"
                                                    placeholder="MM/yyyy">
                                         </dd>
@@ -83,14 +83,14 @@
                                     <dl>
                                         <dt>Должность:</dt>
                                         <dd>
-                                            <input type="text" name="${type}${counter.index}position" size="75"
+                                            <input type="text" name="${type.name()}${counter.index}title" size="75"
                                                    value="${period.title}">
                                         </dd>
                                     </dl>
                                     <dl>
                                         <dt>Описание:</dt>
                                         <dd>
-                                            <textarea name="${type}${counter.index}description" rows="2"
+                                            <textarea name="${type.name()}${counter.index}description" rows="2"
                                                       cols="75">${period.description}</textarea>
                                         </dd>
                                     </dl>

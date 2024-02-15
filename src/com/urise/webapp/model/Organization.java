@@ -22,23 +22,23 @@ public final class Organization implements Serializable {
     private static final long serialVersionUID = 1L;
     public static final Organization EMPTY = new Organization("", "", Period.EMPTY);
     private String title;
-    private String website;
+    private String url;
     private List<Period> periods;
 
-    public Organization(String website, List<Period> periods) {
-        this.website = website;
+    public Organization(String url, List<Period> periods) {
+        this.url = url;
         this.periods = periods;
     }
 
-    public Organization(String title, String website, Period... periods) {
-        this(title, website, Arrays.asList(periods));
+    public Organization(String title, String url, Period... periods) {
+        this(title, url, Arrays.asList(periods));
     }
 
-    public Organization(String title, String website, List<Period> periods) {
+    public Organization(String title, String url, List<Period> periods) {
         Objects.requireNonNull(title, "Title must not be null");
         Objects.requireNonNull(periods, "Periods must not be null");
         this.title = title;
-        this.website = website != null ? website : "";
+        this.url = url != null ? url : "";
         this.periods = periods;
     }
 
@@ -47,7 +47,7 @@ public final class Organization implements Serializable {
     }
 
     public String website() {
-        return website;
+        return url;
     }
 
     public List<Period> periods() {
@@ -63,12 +63,12 @@ public final class Organization implements Serializable {
     }
 
 
-    public String getWebsite() {
-        return website;
+    public String getUrl() {
+        return url;
     }
 
-    public void setWebsite(String website) {
-        this.website = website;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public List<Period> getPeriods() {
@@ -84,19 +84,19 @@ public final class Organization implements Serializable {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Organization that = (Organization) o;
-        return Objects.equals(title, that.title) && Objects.equals(website, that.website) && Objects.equals(periods, that.periods);
+        return Objects.equals(title, that.title) && Objects.equals(url, that.url) && Objects.equals(periods, that.periods);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, website, periods);
+        return Objects.hash(title, url, periods);
     }
 
     @Override
     public String toString() {
         return "Organization[" +
                 "title=" + title + ", " +
-                "website=" + website + ", " +
+                "website=" + url + ", " +
                 "periods=" + periods + ']';
     }
 

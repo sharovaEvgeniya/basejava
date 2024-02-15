@@ -72,11 +72,11 @@
                                 <tr>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${empty org.website}">
+                                            <c:when test="${empty org.url}">
                                                 <h3>${org.title}</h3>
                                             </c:when>
                                             <c:otherwise>
-                                                <h3><a href="${org.website}">${org.title}</a></h3>
+                                                <h3><a href="${org.url}">${org.title}</a></h3>
                                             </c:otherwise>
                                         </c:choose>
                                     </td>
