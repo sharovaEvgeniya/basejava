@@ -39,7 +39,6 @@ public class ResumeTestData {
 
         List<Organization.Period> experienceOrEducation = new ArrayList<>();
         experienceOrEducation.add(period1);
-        experienceOrEducation.add(period2);
 
         Organization organization = new Organization("Java Online Projects", "http://javaops.ru/", experienceOrEducation);
 

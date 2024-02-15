@@ -2,6 +2,7 @@ package com.urise.webapp.web;
 
 import com.urise.webapp.model.*;
 import com.urise.webapp.storage.Storage;
+import com.urise.webapp.util.DateUtil;
 import com.urise.webapp.util.HtmlUtil;
 
 import javax.servlet.ServletConfig;
@@ -96,8 +97,40 @@ public class ResumeServlet extends HttpServlet {
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name());
             String[] values = request.getParameterValues(type.name());
-            if(HtmlUtil.isEmpty(value) && values.length < 2) {
-
+            if (value != null && value.trim().length() != 0) {
+                switch (type) {
+                    case OBJECTIVE, PERSONAL -> resume.setSection(type, new TextSection(value));
+                    case ACHIEVEMENT, QUALIFICATION ->
+                            resume.setSection(type, new ListSection(value.trim().split("\\n")));
+                    case EDUCATION, EXPERIENCE -> {
+                        List<Organization> organizations = new ArrayList<>();
+                        String[] orgName = request.getParameterValues(type.name() + "title");
+                        for (int i = 0; i < values.length; i++) {
+                            String name = values[i];
+                            if (!HtmlUtil.isEmpty(name)) {
+                                List<Organization.Period> periods = new ArrayList<>();
+                                String count = type.name() + i;
+                                String[] startDates = request.getParameterValues(count + "startDate");
+                                String[] endDates = request.getParameterValues(count + "endDate");
+                                String[] positions = request.getParameterValues(count + "position");
+                                String[] descriptions = request.getParameterValues(count + "description");
+                                for (int j = 0; j < positions.length; j++) {
+                                    if (!HtmlUtil.isEmpty(positions[j])) {
+                                        periods.add(new Organization.Period(
+                                                DateUtil.parse(startDates[j]),
+                                                DateUtil.parse(endDates[j]),
+                                                positions[j],
+                                                descriptions[j]));
+                                    }
+                                }
+                                organizations.add(new Organization(orgName[i], null, periods));
+                            }
+                        }
+                        resume.setSection(type, new OrganizationSection(organizations));
+                    }
+                }
+            } else {
+                resume.getSections().remove(type);
             }
         }
         storage.update(resume);

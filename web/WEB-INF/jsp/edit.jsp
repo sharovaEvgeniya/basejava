@@ -39,14 +39,14 @@
                 <h3><a>${type.title}</a></h3>
                 <c:choose>
                     <c:when test="${type == 'OBJECTIVE'}">
-                        <input type="text" name="${type}" size="75" value="<%=((TextSection)section).getContent()%>">
+                        <input type="text" name="${type.name()}" size="75" value="<%=((TextSection)section).getContent()%>">
                     </c:when>
                     <c:when test="${type == 'PERSONAL'}">
                         <textarea name="${type}" cols="75" rows="5"><%=((TextSection) section).getContent()%></textarea>
                     </c:when>
                     <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATION'}">
-                        <textarea name="${type}" cols="75"
-                                  rows="5"> <%=String.join("\n", ((ListSection) section).getStrings())%>
+                        <textarea name="${type.name()}" cols="75"
+                                  rows="5"><%=String.join("\n", ((ListSection) section).getStrings())%>
                         </textarea>
                     </c:when>
                     <c:when test="${type == 'EDUCATION' || type == 'EXPERIENCE'}">
@@ -54,11 +54,11 @@
                                    varStatus="counter">
                             <dl>
                                 <dt>Название учереждения:</dt>
-                                <dd><input type="text" name="${type}" size="100" value="${org.title}"></dd>
+                                <dd><input type="text" name="${type.name()}title" size="100" value="${org.title}"></dd>
                             </dl>
                             <dl>
                                 <dt>Сайт учереждения:</dt>
-                                <dd><input type="text" name="${type}_website" size="100" value="${org.website}"></dd>
+                                <dd><input type="text" name="${type.name()}website" size="100" value="${org.website}"></dd>
                             </dl>
                             <br>
                             <div style="margin-left: 30px">
@@ -83,7 +83,7 @@
                                     <dl>
                                         <dt>Должность:</dt>
                                         <dd>
-                                            <input type="text" name="${type}${counter.index}title" size="75"
+                                            <input type="text" name="${type}${counter.index}position" size="75"
                                                    value="${period.title}">
                                         </dd>
                                     </dl>
