@@ -58,7 +58,7 @@
                             </dl>
                             <dl>
                                 <dt>Сайт учереждения:</dt>
-                                <dd><input type="text" name="${type.name()}url" size="100" value="${org.url}"></dd>
+                                <dd><input type="text" name="${type.name()}link" size="100" value="${org.url}"></dd>
                             </dl>
                             <br>
                             <div style="margin-left: 30px">

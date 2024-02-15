@@ -95,18 +95,19 @@ public class ResumeServlet extends HttpServlet {
             }
         }
         for (SectionType type : SectionType.values()) {
-            String value = request.getParameter(type.name());
-            String[] values = request.getParameterValues(type.name());
+            String value = request.getParameter(type.name()) == null ?
+                    request.getParameter(type.name() + "orgName") : request.getParameter(type.name());
             if (value != null && value.trim().length() != 0) {
                 switch (type) {
                     case OBJECTIVE, PERSONAL -> resume.setSection(type, new TextSection(value));
                     case ACHIEVEMENT, QUALIFICATION ->
                             resume.setSection(type, new ListSection(value.trim().split("\\n")));
                     case EDUCATION, EXPERIENCE -> {
-                        List<Organization> organizations = new ArrayList<>();
-                        String[] orgName = request.getParameterValues(type.name() + "title");
-                        for (int i = 0; i < values.length; i++) {
-                            String name = values[i];
+                        List<Organization> organizationList = new ArrayList<>();
+                        String[] nameOrganization = request.getParameterValues(type.name() + "orgName");
+                        String[] linkOrganization = request.getParameterValues(type.name() + "link");
+                        for (int i = 0; i < nameOrganization.length; i++) {
+                            String name = nameOrganization[i];
                             if (!HtmlUtil.isEmpty(name)) {
                                 List<Organization.Period> periods = new ArrayList<>();
                                 String count = type.name() + i;
@@ -123,10 +124,10 @@ public class ResumeServlet extends HttpServlet {
                                                 descriptions[j]));
                                     }
                                 }
-                                organizations.add(new Organization(orgName[i], null, periods));
+                                organizationList.add(new Organization(nameOrganization[i], linkOrganization[i], periods));
                             }
                         }
-                        resume.setSection(type, new OrganizationSection(organizations));
+                        resume.setSection(type, new OrganizationSection(organizationList));
                     }
                 }
             } else {
