@@ -46,7 +46,7 @@
                                       rows="5"><%=((TextSection) section).getContent()%></textarea></dd>
                     </c:when>
                     <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATION'}">
-                        <dd><textarea name="${type.name()}" cols="75"
+                        <dd><textarea name="${type}" cols="75"
                                       rows="5"><%=String.join("\n", ((ListSection) section).getStrings())%>
                         </textarea></dd>
                     </c:when>
