@@ -80,7 +80,7 @@ public class ResumeTestData {
                     List<Organization> organizations = ((OrganizationSection) entry.getValue()).getOrganizations();
                     System.out.println(entry.getKey().getTitle() + " :\n");
                     for (Organization org : organizations) {
-                        System.out.println(org.title() + "   " + org.website());
+                        System.out.println(org.title() + "   " + org.url());
                         List<Organization.Period> periods = org.periods();
                         for (Organization.Period period : periods) {
                             System.out.println(period.start() + " —— " + period.end() + "  "

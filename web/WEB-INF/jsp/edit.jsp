@@ -83,7 +83,7 @@
                                     <dl>
                                         <dt>Должность:</dt>
                                         <dd>
-                                            <input type="text" name="${type.name()}${counter.index}title" size="75"
+                                            <input type="text" name="${type.name()}${counter.index}position" size="75"
                                                    value="${period.title}">
                                         </dd>
                                     </dl>

@@ -35,9 +35,8 @@ public final class Organization implements Serializable {
     }
 
     public Organization(String title, String url, List<Period> periods) {
-        Objects.requireNonNull(title, "Title must not be null");
         Objects.requireNonNull(periods, "Periods must not be null");
-        this.title = title;
+        this.title = title != null ? title : "";
         this.url = url != null ? url : "";
         this.periods = periods;
     }
@@ -46,7 +45,7 @@ public final class Organization implements Serializable {
         return title;
     }
 
-    public String website() {
+    public String url() {
         return url;
     }
 

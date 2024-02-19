@@ -35,7 +35,7 @@ public class DataStreamSerializer implements StreamSerializer {
                     case EXPERIENCE, EDUCATION ->
                             writeWithException(((OrganizationSection) entry.getValue()).getOrganizations(), dos, organization -> {
                                 dos.writeUTF(organization.title());
-                                dos.writeUTF(organization.website());
+                                dos.writeUTF(organization.url());
                                 writeWithException(organization.periods(), dos, period -> {
                                     localDateWrite(dos, period.start());
                                     localDateWrite(dos, period.end());

@@ -51,19 +51,36 @@ public class ResumeServlet extends HttpServlet {
 
             case "edit" -> {
                 r = storage.get(uuid);
-                for (SectionType type : new SectionType[]{SectionType.EXPERIENCE, SectionType.EDUCATION}) {
-                    OrganizationSection section = (OrganizationSection) r.getSection(type);
-                    List<Organization> emptyFirstOrganizations = new ArrayList<>();
-                    emptyFirstOrganizations.add(Organization.EMPTY);
-                    if (section != null) {
-                        for (Organization organization : section.getOrganizations()) {
-                            List<Organization.Period> emptyFirstPeriod = new ArrayList<>();
-                            emptyFirstPeriod.add(Organization.Period.EMPTY);
-                            emptyFirstPeriod.addAll(organization.getPeriods());
-                            emptyFirstOrganizations.add(new Organization(organization.website(), emptyFirstPeriod));
+                for (SectionType type : SectionType.values()) {
+                    Section section = r.getSection(type);
+                    switch (type) {
+                        case OBJECTIVE, PERSONAL -> {
+                            if (section == null) {
+                                section = TextSection.EMPTY;
+                            }
+                        }
+                        case ACHIEVEMENT, QUALIFICATION -> {
+                            if (section == null) {
+                                section = ListSection.EMPTY;
+                            }
+                        }
+                        case EXPERIENCE, EDUCATION -> {
+                            OrganizationSection orgSection = (OrganizationSection) r.getSection(type);
+                            List<Organization> emptyFirstOrganizations = new ArrayList<>();
+                            emptyFirstOrganizations.add(new Organization("", "", new Organization.Period()));
+                            if (orgSection != null) {
+                                for (Organization organization : orgSection.getOrganizations()) {
+                                    List<Organization.Period> emptyFirstPeriods = new ArrayList<>();
+                                    emptyFirstPeriods.addAll(organization.getPeriods());
+                                    emptyFirstOrganizations.add(new Organization(organization.getTitle(), organization.getUrl(), emptyFirstPeriods));
+                                }
+                            }
+                            section = new OrganizationSection(emptyFirstOrganizations);
+                            System.out.println(section);
                         }
                     }
-                    r.setSection(type, new OrganizationSection(emptyFirstOrganizations));
+                    r.setSection(type, section);
+                    System.out.println(r);
                 }
             }
             default -> throw new IllegalArgumentException("Action " + action + "  is illegal");
@@ -97,7 +114,11 @@ public class ResumeServlet extends HttpServlet {
         for (SectionType type : SectionType.values()) {
             String value = request.getParameter(type.name()) == null ?
                     request.getParameter(type.name() + "orgName") : request.getParameter(type.name());
-            if (value != null && value.trim().length() != 0) {
+            String[] values = request.getParameterValues(type.name()) == null ?
+                    request.getParameterValues(type.name() + "orgName") : request.getParameterValues(type.name());
+            if (HtmlUtil.isEmpty(value) && values.length < 2) {
+                resume.getSections().remove(type);
+            } else {
                 switch (type) {
                     case OBJECTIVE, PERSONAL -> resume.setSection(type, new TextSection(value));
                     case ACHIEVEMENT, QUALIFICATION ->
@@ -130,8 +151,6 @@ public class ResumeServlet extends HttpServlet {
                         resume.setSection(type, new OrganizationSection(organizationList));
                     }
                 }
-            } else {
-                resume.getSections().remove(type);
             }
         }
         storage.update(resume);
