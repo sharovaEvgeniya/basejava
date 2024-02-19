@@ -124,31 +124,8 @@ public class ResumeServlet extends HttpServlet {
                     case ACHIEVEMENT, QUALIFICATION ->
                             resume.setSection(type, new ListSection(value.trim().split("\\n")));
                     case EDUCATION, EXPERIENCE -> {
-                        List<Organization> organizationList = new ArrayList<>();
-                        String[] nameOrganization = request.getParameterValues(type.name() + "orgName");
-                        String[] linkOrganization = request.getParameterValues(type.name() + "link");
-                        for (int i = 0; i < nameOrganization.length; i++) {
-                            String name = nameOrganization[i];
-                            if (!HtmlUtil.isEmpty(name)) {
-                                List<Organization.Period> periods = new ArrayList<>();
-                                String count = type.name() + i;
-                                String[] startDates = request.getParameterValues(count + "startDate");
-                                String[] endDates = request.getParameterValues(count + "endDate");
-                                String[] positions = request.getParameterValues(count + "position");
-                                String[] descriptions = request.getParameterValues(count + "description");
-                                for (int j = 0; j < positions.length; j++) {
-                                    if (!HtmlUtil.isEmpty(positions[j])) {
-                                        periods.add(new Organization.Period(
-                                                DateUtil.parse(startDates[j]),
-                                                DateUtil.parse(endDates[j]),
-                                                positions[j],
-                                                descriptions[j]));
-                                    }
-                                }
-                                organizationList.add(new Organization(nameOrganization[i], linkOrganization[i], periods));
-                            }
-                        }
-                        resume.setSection(type, new OrganizationSection(organizationList));
+                        OrganizationSection organizationSection = setOrganization(request, type);
+                        resume.setSection(type, organizationSection);
                     }
                 }
             }
@@ -168,13 +145,13 @@ public class ResumeServlet extends HttpServlet {
     private OrganizationSection setOrganization(HttpServletRequest request, SectionType type) {
         List<Organization> organizationList = new ArrayList<>();
         String[] nameOrganization = request.getParameterValues(type.name() + "orgName");
-        String[] linkOrganization = request.getParameterValues(type.name() + "website");
+        String[] linkOrganization = request.getParameterValues(type.name() + "link");
         for (int i = 0; i < nameOrganization.length; i++) {
             if (isPresent(nameOrganization[i])) {
                 List<Organization.Period> periodList = setPeriod(
                         request.getParameterValues(type.name() + i + "startDate"),
                         request.getParameterValues(type.name() + i + "endDate"),
-                        request.getParameterValues(type.name() + i + "title"),
+                        request.getParameterValues(type.name() + i + "position"),
                         request.getParameterValues(type.name() + i + "description"));
                 organizationList.add(new Organization(nameOrganization[i], linkOrganization[i], periodList));
             }
@@ -182,18 +159,18 @@ public class ResumeServlet extends HttpServlet {
         return organizationList.size() == 0 ? null : new OrganizationSection(organizationList);
     }
 
-    private static List<Organization.Period> setPeriod(String[] startDate, String[] endDate, String[] title, String[] description) {
+    private static List<Organization.Period> setPeriod(String[] startDate, String[] endDate, String[] position, String[] description) {
         List<Organization.Period> periodList = new ArrayList<>();
-        for (int i = 0; i < title.length; i++) {
-            if (isPresent(startDate[i]) && isPresent(title[i])) {
-                periodList.add(new Organization.Period(checkDate(startDate[i]), checkDate(endDate[i]), title[i], description[i]));
+        for (int i = 0; i < position.length; i++) {
+            if (isPresent(startDate[i]) && isPresent(position[i])) {
+                periodList.add(new Organization.Period(checkDate(startDate[i]), checkDate(endDate[i]), position[i], description[i]));
             }
         }
         return periodList.isEmpty() ? null : periodList;
     }
 
     private static LocalDate checkDate(String line) {
-        return line.isEmpty() ? null : LocalDate.parse(line);
+        return line.isEmpty() ? null : DateUtil.parse(line);
     }
 
     private static boolean isPresent(String line) {
