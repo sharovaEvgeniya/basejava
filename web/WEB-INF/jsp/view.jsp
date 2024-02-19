@@ -38,26 +38,21 @@
                 <c:set var="section" value="${sectionEntry.value}"/>
                 <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
                 <tr>
-                    <td><h3>${type.title}</h3></td>
+                    <td class="section-title">${type.title}</td>
                     <c:if test="${type == 'OBJECTIVE'}">
-                        <td>
-                            <h3><%=((TextSection) section).getContent()%>
-                            </h3>
-                        </td>
+                        <td class="section-value"><%=((TextSection) section).getContent()%></td>
                     </c:if>
                 </tr>
                 <c:if test="${type != 'OBJECTIVE'}">
                     <c:choose>
                         <c:when test="${type == 'PERSONAL'}">
                             <tr>
-                                <td>
-                                    <%=((TextSection) section).getContent()%>
-                                </td>
+                                <td class="section-value"><%=((TextSection) section).getContent()%></td>
                             </tr>
                         </c:when>
                         <c:when test="${type == 'ACHIEVEMENT' || type == 'QUALIFICATION'}">
                             <tr>
-                                <td>
+                                <td class="section-value">
                                     <ul>
                                         <c:forEach var="item" items="<%=((ListSection) section).getStrings()%>">
                                             <li>${item}</li>
@@ -83,9 +78,9 @@
                                 <c:forEach var="period" items="${org.periods()}">
                                     <jsp:useBean id="period" type="com.urise.webapp.model.Organization.Period"/>
                                     <tr>
-                                        <td><%=HtmlUtil.formatDates(period)%>
+                                        <td style="color: #4A586E"><%=HtmlUtil.formatDates(period)%>
                                         </td>
-                                        <td><b>${period.title}</b><br>${period.description}</td>
+                                        <td style="color: #4A586E"><b>${period.title}</b><br>${period.description}</td>
                                     </tr>
                                 </c:forEach>
                             </c:forEach>
@@ -94,7 +89,7 @@
                 </c:if>
             </c:forEach>
         </table>
-        <button onclick="window.history.back()">Back</button>
+        <button class="button" onclick="window.history.back()">Back</button>
     </div>
 </div>
 </body>

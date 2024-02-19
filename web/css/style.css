@@ -52,6 +52,10 @@ hr {
 
 .sections {
     margin-top: 20px;
+    margin-left: 15%;
+    color: #4A586E;
+    text-align: left;
+    font-size: 15px;
 }
 
 .section-title {
@@ -59,7 +63,7 @@ hr {
     margin-top: 15px;
     color: #4A586E;
     text-align: left;
-    font-size: 25px;
+    font-size: 15px;
 }
 
 .section-value {
@@ -152,6 +156,7 @@ a:hover {
     text-decoration: underline;
     color: #4A586E;
 }
+
 footer {
     background: none repeat scroll 0 0 #FAFAFA;
     color: #4A586E;
@@ -173,10 +178,39 @@ dt {
 
 dd {
     display: inline-block;
+    margin-top: 10px;
     margin-left: 8px;
     vertical-align: top;
 }
 
 h3 {
     margin: 15px 0 5px;
+}
+
+.btn-new {
+    border: none;
+    border-radius: 10px;
+    text-decoration: none;
+    color: white;
+    background: #333333;
+
+}
+.button {
+    color: #4A586E;
+    margin: 20px 0 10px 25%;
+    display: block;
+    width: 50%;
+    padding: 0 20px;
+    background: #EDEFF2;
+    line-height: 40px;
+    border-width: 0;
+    border-radius: 20px;
+    font-family: 'Roboto', sans-serif;
+}
+
+.btn-new:hover {
+    background: #003CC5;
+    box-shadow: none;
+    position: relative;
+    top: 5px;
 }
