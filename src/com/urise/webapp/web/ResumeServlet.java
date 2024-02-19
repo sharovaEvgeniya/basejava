@@ -42,13 +42,8 @@ public class ResumeServlet extends HttpServlet {
                 response.sendRedirect("resume");
                 return;
             }
-            case "add" -> {
-                request.getRequestDispatcher("/WEB-INF/jsp/add.jsp").forward(request, response);
-                response.sendRedirect("resume");
-                return;
-            }
+            case "add" -> r = Resume.EMPTY;
             case "view" -> r = storage.get(uuid);
-
             case "edit" -> {
                 r = storage.get(uuid);
                 for (SectionType type : SectionType.values()) {
@@ -70,8 +65,7 @@ public class ResumeServlet extends HttpServlet {
                             emptyFirstOrganizations.add(new Organization("", "", new Organization.Period()));
                             if (orgSection != null) {
                                 for (Organization organization : orgSection.getOrganizations()) {
-                                    List<Organization.Period> emptyFirstPeriods = new ArrayList<>();
-                                    emptyFirstPeriods.addAll(organization.getPeriods());
+                                    List<Organization.Period> emptyFirstPeriods = new ArrayList<>(organization.getPeriods());
                                     emptyFirstOrganizations.add(new Organization(organization.getTitle(), organization.getUrl(), emptyFirstPeriods));
                                 }
                             }
@@ -96,7 +90,7 @@ public class ResumeServlet extends HttpServlet {
         String uuid = request.getParameter("uuid");
         String fullName = request.getParameter("fullName");
         Resume resume;
-        if (uuid == null) {
+        if (uuid == null || uuid.trim().length() == 0) {
             resume = new Resume(UUID.randomUUID().toString(), fullName.trim());
             storage.save(resume);
         } else {

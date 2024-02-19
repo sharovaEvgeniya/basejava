@@ -30,7 +30,6 @@
     </div>
     <hr>
     <div class="sections">
-        <h3>Sections:</h3>
         <table>
             <c:forEach var="sectionEntry" items="${resume.sections}">
                 <jsp:useBean id="sectionEntry"

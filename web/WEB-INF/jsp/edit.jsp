@@ -36,6 +36,7 @@
             <c:forEach var="type" items="<%=SectionType.values()%>">
                 <c:set var="section" value="${resume.getSection(type)}"/>
                 <jsp:useBean id="section" type="com.urise.webapp.model.Section"/>
+            <dl>
                 <h3><a>${type.title}</a></h3>
                 <c:choose>
                     <c:when test="${type == 'OBJECTIVE'}">
@@ -99,6 +100,7 @@
                         </c:forEach>
                     </c:when>
                 </c:choose>
+            </dl>
             </c:forEach>
         </div>
         <button type="submit">Save</button>
