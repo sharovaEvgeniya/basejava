@@ -5,7 +5,10 @@ import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serial;
 import java.io.Serializable;
-import java.util.*;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 /**
  * Initial resume class
@@ -25,6 +28,7 @@ public class Resume implements Comparable<Resume>, Serializable {
         EMPTY.setSection(SectionType.EXPERIENCE, new OrganizationSection(Organization.EMPTY));
         EMPTY.setSection(SectionType.EDUCATION, new OrganizationSection(Organization.EMPTY));
     }
+
     // Unique identifier
     private String uuid;
     private String fullName;
@@ -93,46 +97,6 @@ public class Resume implements Comparable<Resume>, Serializable {
 
     public Section getSection(SectionType type) {
         return sections.get(type);
-    }
-
-    public String toHtml(SectionType type) {
-        String str = "";
-        if (type != null) {
-            switch (type) {
-                case OBJECTIVE, PERSONAL -> {
-                    TextSection textSection = (TextSection) sections.get(type);
-                    if (textSection == null) {
-                        return "";
-                    }
-                    str = textSection.getContent();
-                }
-                case ACHIEVEMENT, QUALIFICATION -> {
-                    ListSection listSection = (ListSection) sections.get(type);
-                    if (listSection == null) {
-                        return "";
-                    }
-                    List<String> stringList = listSection.getStrings();
-                    for (String string : stringList) {
-                        str += string + ".";
-                    }
-                }
-                case EDUCATION, EXPERIENCE -> {
-                    OrganizationSection organizationSection = (OrganizationSection) sections.get(type);
-                    if (organizationSection == null) {
-                        return "";
-                    }
-                    List<Organization> orgList = organizationSection.getOrganizations();
-                    for (Organization org : orgList) {
-                        List<Organization.Period> periods = org.periods();
-                        for (Organization.Period period : periods) {
-                            str = period.start() + " — " + period.end() + "  " +
-                                    period.title() + "\n" + period.description() + "\n";
-                        }
-                    }
-                }
-            }
-        }
-        return str;
     }
 
     public void setSection(SectionType type, Section section) {
